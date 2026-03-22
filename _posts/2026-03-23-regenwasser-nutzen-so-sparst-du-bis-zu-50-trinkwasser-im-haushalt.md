@@ -1,12 +1,12 @@
 ---
 title: "Regenwasser nutzen: So sparst du bis zu 50% Trinkwasser im Haushalt"
-date: 2026-03-23
+date: 2026-03-24
 author: Autarkie-Finder
 category: wasser
 description: "Regenwasser nutzen für Toilette, Waschmaschine und Garten. Kosten, Tankgrößen und Einsparpotenzial einer Regenwasseranlage im Überblick."
 reading_time: 5
 status: scheduled
-publish_date: "2026-03-23"
+publish_date: "2026-03-24"
 publish_time: "08:00"
 image: "https://images.unsplash.com/photo-1428592953211-077101b2021b?w=800&q=80"
 image_alt: "Regen auf einer Oberfläche"
