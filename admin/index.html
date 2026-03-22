@@ -625,7 +625,7 @@
           var slug = f.name.replace(/^\d{4}-\d{2}-\d{2}-/, '').replace('.md', '');
           var date = f.name.substring(0, 10);
           xml += '  <url>\n';
-          xml += '    <loc>https://blog.autarkie-finder.com/#/post/' + slug + '</loc>\n';
+          xml += '    <loc>https://blog.autarkie-finder.com/' + slug + '</loc>\n';
           xml += '    <lastmod>' + date + '</lastmod>\n';
           xml += '    <changefreq>monthly</changefreq>\n';
           xml += '    <priority>0.8</priority>\n';
