@@ -1,13 +1,13 @@
 ---
 title: "Stromspeicher Test 2026: Die besten Heimspeicher im Vergleich"
-date: 2026-03-23
+date: 2026-03-24
 author: Autarkie-Finder
 category: technik
 description: "Stromspeicher Test 2026: Fox ESS, SAX Power und SMA als Testsieger. Effizienz, Kosten und Kauftipps für Heimspeicher im Vergleich."
 reading_time: 8
 status: scheduled
-publish_date: "2026-03-23"
-publish_time: "00:00"
+publish_date: "2026-03-24"
+publish_time: "08:00"
 image: "https://images.unsplash.com/photo-1620714223084-8fcacc6dfd8d?w=800&q=80"
 image_alt: "Batteriespeicher neben einer Solaranlage"
 keywords: "Stromspeicher Test 2026, Heimspeicher Vergleich, Batteriespeicher, Fox ESS, SAX Power, SMA, Solarstromspeicher"
