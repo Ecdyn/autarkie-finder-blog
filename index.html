@@ -11,15 +11,12 @@
   <link rel="canonical" href="https://blog.autarkie-finder.com">
 
   <meta property="og:title" content="Blog – Autarkie-Finder">
-  <meta property="og:description" content="Tipps, Anleitungen und Wissen rund um autarkes Leben – Energie, Wasser, Ernährung und nachhaltiges Wohnen.">
+  <meta property="og:description" content="Tipps, Anleitungen und Wissen rund um autarkes Leben.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://blog.autarkie-finder.com">
   <meta property="og:locale" content="de_DE">
   <meta property="og:site_name" content="Autarkie-Finder">
-
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Blog – Autarkie-Finder">
-  <meta name="twitter:description" content="Dein Weg in die Unabhängigkeit – Energie, Wasser, Ernährung, Wohnen.">
 
   <script type="application/ld+json">
   {
@@ -28,240 +25,156 @@
     "name": "Autarkie-Finder Blog",
     "description": "Tipps, Anleitungen und Wissen rund um autarkes Leben",
     "url": "https://blog.autarkie-finder.com",
-    "publisher": {
-      "@type": "Organization",
-      "name": "Autarkie-Finder",
-      "url": "https://autarkie-finder.com"
-    }
+    "publisher": { "@type": "Organization", "name": "Autarkie-Finder", "url": "https://autarkie-finder.com" }
   }
   </script>
 
   <script>
-    (function() {
-      var s = localStorage.getItem('theme');
-      if (!s) s = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
-      document.documentElement.setAttribute('data-theme', s);
-    })();
+    (function(){var s=localStorage.getItem('theme');if(!s)s=window.matchMedia('(prefers-color-scheme:light)').matches?'light':'dark';document.documentElement.setAttribute('data-theme',s);})();
   </script>
 
   <style>
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 
-    [data-theme="dark"] {
-      --bg: #0a0a0a;
-      --bg-card: #111111;
-      --bg-card-hover: #1a1a1a;
-      --bg-nav: rgba(10, 10, 10, 0.9);
-      --text: #e5e5e5;
-      --text-secondary: #a0a0a0;
-      --text-muted: #666666;
-      --accent: #22c55e;
-      --accent-border: rgba(34, 197, 94, 0.25);
-      --border: rgba(255, 255, 255, 0.08);
-      --border-hover: rgba(255, 255, 255, 0.15);
-      --toggle-bg: #1a1a1a;
-      --toggle-border: rgba(255, 255, 255, 0.12);
+    [data-theme="dark"]{
+      --bg:#0a0a0a;--bg-card:#111;--bg-card-hover:#1a1a1a;--bg-nav:rgba(10,10,10,0.92);
+      --text:#e5e5e5;--text-sec:#a0a0a0;--text-muted:#666;
+      --accent:#22c55e;--accent-border:rgba(34,197,94,0.25);
+      --border:rgba(255,255,255,0.08);--border-hover:rgba(255,255,255,0.15);
+      --toggle-bg:#1a1a1a;--toggle-border:rgba(255,255,255,0.12);
+    }
+    [data-theme="light"]{
+      --bg:#f5f5f5;--bg-card:#fff;--bg-card-hover:#fafafa;--bg-nav:rgba(245,245,245,0.92);
+      --text:#1a1a1a;--text-sec:#555;--text-muted:#888;
+      --accent:#16a34a;--accent-border:rgba(22,163,74,0.3);
+      --border:rgba(0,0,0,0.08);--border-hover:rgba(0,0,0,0.15);
+      --toggle-bg:#e8e8e8;--toggle-border:rgba(0,0,0,0.1);
     }
 
-    [data-theme="light"] {
-      --bg: #f5f5f5;
-      --bg-card: #ffffff;
-      --bg-card-hover: #fafafa;
-      --bg-nav: rgba(245, 245, 245, 0.9);
-      --text: #1a1a1a;
-      --text-secondary: #555555;
-      --text-muted: #888888;
-      --accent: #16a34a;
-      --accent-border: rgba(22, 163, 74, 0.3);
-      --border: rgba(0, 0, 0, 0.08);
-      --border-hover: rgba(0, 0, 0, 0.15);
-      --toggle-bg: #e8e8e8;
-      --toggle-border: rgba(0, 0, 0, 0.1);
-    }
+    :root{--r:16px;--t:0.25s ease;}
 
-    :root { --radius-lg: 16px; --transition: 0.25s ease; }
-
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.6;
-      -webkit-font-smoothing: antialiased;
-      transition: background 0.3s ease, color 0.3s ease;
-    }
-
-    a { color: inherit; text-decoration: none; }
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;transition:background .3s,color .3s;}
+    a{color:inherit;text-decoration:none;}
 
     /* Nav */
-    nav {
-      position: sticky; top: 0; z-index: 100;
-      background: var(--bg-nav);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--border);
-      transition: background 0.3s ease;
-    }
-    .nav-inner {
-      max-width: 1100px; margin: 0 auto; padding: 0 1.5rem;
-      height: 60px; display: flex; align-items: center; justify-content: space-between;
-    }
-    .logo { display: flex; align-items: center; gap: 0.5rem; font-weight: 700; font-size: 1.05rem; color: var(--text); }
-    .logo-dot { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; }
-    .nav-right { display: flex; align-items: center; gap: 2rem; }
-    .nav-links { display: flex; align-items: center; gap: 2rem; list-style: none; }
-    .nav-links a { font-size: 0.9rem; color: var(--text-secondary); transition: color var(--transition); }
-    .nav-links a:hover, .nav-links a.active { color: var(--accent); }
+    nav{position:sticky;top:0;z-index:100;background:var(--bg-nav);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);transition:background .3s;}
+    .nav-inner{max-width:1100px;margin:0 auto;padding:0 1.5rem;height:56px;display:flex;align-items:center;justify-content:space-between;}
+    .logo{display:flex;align-items:center;gap:.5rem;font-weight:700;font-size:1rem;color:var(--text);}
+    .logo-dot{width:8px;height:8px;background:var(--accent);border-radius:50%;}
+    .nav-right{display:flex;align-items:center;gap:1.8rem;}
+    .nav-links{display:flex;align-items:center;gap:1.8rem;list-style:none;}
+    .nav-links a{font-size:.88rem;color:var(--text-sec);transition:color var(--t);}
+    .nav-links a:hover,.nav-links a.active{color:var(--accent);}
+    .theme-toggle{background:var(--toggle-bg);border:1px solid var(--toggle-border);border-radius:50px;width:40px;height:24px;cursor:pointer;position:relative;transition:all .3s;flex-shrink:0;}
+    .theme-toggle:hover{border-color:var(--accent-border);}
+    .toggle-dot{position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:var(--accent);transition:transform .3s;}
+    [data-theme="light"] .toggle-dot{transform:translateX(16px);}
+    .hamburger{display:none;background:none;border:none;cursor:pointer;padding:.5rem;}
+    .hamburger span{display:block;width:18px;height:2px;background:var(--text);margin:4px 0;border-radius:1px;}
 
-    .theme-toggle {
-      background: var(--toggle-bg); border: 1px solid var(--toggle-border);
-      border-radius: 50px; width: 44px; height: 26px; cursor: pointer;
-      position: relative; transition: all 0.3s ease; flex-shrink: 0;
-    }
-    .theme-toggle:hover { border-color: var(--accent-border); }
-    .toggle-dot {
-      position: absolute; top: 3px; left: 3px;
-      width: 18px; height: 18px; border-radius: 50%;
-      background: var(--accent); transition: transform 0.3s ease;
-    }
-    [data-theme="light"] .toggle-dot { transform: translateX(18px); }
-
-    .hamburger { display: none; background: none; border: none; cursor: pointer; padding: 0.5rem; }
-    .hamburger span { display: block; width: 20px; height: 2px; background: var(--text); margin: 4px 0; border-radius: 1px; }
-
-    .mobile-menu {
-      display: none; position: fixed; inset: 0; background: var(--bg);
-      z-index: 99; flex-direction: column; align-items: center; justify-content: center; gap: 2rem;
-    }
-    .mobile-menu.open { display: flex; }
-    .mobile-menu a { font-size: 1.2rem; color: var(--text); }
-    .mobile-close { position: absolute; top: 1rem; right: 1.5rem; background: none; border: none; font-size: 1.8rem; color: var(--text); cursor: pointer; }
-    .mobile-theme { display: flex; align-items: center; gap: 0.6rem; color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.5rem; }
+    .mobile-menu{display:none;position:fixed;inset:0;background:var(--bg);z-index:99;flex-direction:column;align-items:center;justify-content:center;gap:1.8rem;}
+    .mobile-menu.open{display:flex;}
+    .mobile-menu a{font-size:1.1rem;color:var(--text);}
+    .mobile-close{position:absolute;top:1rem;right:1.5rem;background:none;border:none;font-size:1.8rem;color:var(--text);cursor:pointer;}
+    .mobile-theme{display:flex;align-items:center;gap:.6rem;color:var(--text-sec);font-size:.88rem;margin-top:.5rem;}
 
     /* Hero */
-    .hero { max-width: 1100px; margin: 0 auto; padding: 4rem 1.5rem 2rem; }
-    .hero-label { display: inline-block; font-size: 0.78rem; font-weight: 600; color: var(--accent); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1rem; }
-    .hero h1 { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 700; line-height: 1.2; margin-bottom: 0.75rem; letter-spacing: -0.02em; }
-    .hero p { font-size: 1.05rem; color: var(--text-secondary); max-width: 560px; line-height: 1.7; }
+    .hero{max-width:1100px;margin:0 auto;padding:3.5rem 1.5rem 1.5rem;}
+    .hero-label{display:inline-block;font-size:.75rem;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.8rem;}
+    .hero h1{font-size:clamp(1.6rem,4vw,2.6rem);font-weight:700;line-height:1.2;margin-bottom:.6rem;letter-spacing:-.02em;}
+    .hero p{font-size:1rem;color:var(--text-sec);max-width:540px;line-height:1.7;}
 
     /* Categories */
-    .categories { max-width: 1100px; margin: 0 auto; padding: 0.5rem 1.5rem 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; }
-    .cat-btn {
-      padding: 0.4rem 1rem; border-radius: 50px; border: 1px solid var(--border);
-      background: transparent; color: var(--text-secondary); font-family: inherit;
-      font-size: 0.85rem; cursor: pointer; transition: all var(--transition);
-    }
-    .cat-btn:hover { border-color: var(--accent-border); color: var(--accent); }
-    .cat-btn.active { background: var(--accent); color: #000; border-color: var(--accent); font-weight: 600; }
+    .categories{max-width:1100px;margin:0 auto;padding:.5rem 1.5rem 1.2rem;display:flex;gap:.4rem;flex-wrap:wrap;}
+    .cat-btn{padding:.35rem .9rem;border-radius:50px;border:1px solid var(--border);background:transparent;color:var(--text-sec);font-family:inherit;font-size:.82rem;cursor:pointer;transition:all var(--t);white-space:nowrap;}
+    .cat-btn:hover{border-color:var(--accent-border);color:var(--accent);}
+    .cat-btn.active{background:var(--accent);color:#000;border-color:var(--accent);font-weight:600;}
 
     /* Blog Grid */
-    .blog-grid {
-      max-width: 1100px; margin: 0 auto; padding: 1rem 1.5rem 4rem;
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem;
-    }
+    .blog-grid{max-width:1100px;margin:0 auto;padding:.8rem 1.5rem 3rem;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.2rem;}
 
     /* Post Card */
-    .post-card {
-      background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: var(--radius-lg); overflow: hidden;
-      transition: all var(--transition); cursor: pointer;
-      animation: fadeIn 0.4s ease forwards; opacity: 0;
-    }
-    .post-card:hover { border-color: var(--border-hover); background: var(--bg-card-hover); transform: translateY(-2px); }
-    .post-badge-wrap { padding: 1.25rem 1.5rem 0; }
-    .post-badge {
-      display: inline-block; padding: 0.25rem 0.65rem;
-      border-radius: 6px; font-size: 0.72rem; font-weight: 600; text-transform: uppercase;
-      letter-spacing: 0.04em; background: rgba(34, 197, 94, 0.9); color: #000;
-    }
-    .post-body { padding: 0.75rem 1.5rem 1.5rem; }
-    .post-meta { display: flex; align-items: center; gap: 1rem; margin-bottom: 0.6rem; font-size: 0.8rem; color: var(--text-muted); }
-    .post-card h2 { font-size: 1.15rem; font-weight: 600; line-height: 1.4; margin-bottom: 0.5rem; }
-    .post-card .excerpt { color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-    .read-more { display: inline-flex; align-items: center; gap: 0.3rem; margin-top: 1rem; color: var(--accent); font-weight: 600; font-size: 0.85rem; transition: gap var(--transition); }
-    .read-more:hover { gap: 0.6rem; }
+    .post-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;transition:all var(--t);cursor:pointer;animation:fadeIn .4s ease forwards;opacity:0;}
+    .post-card:hover{border-color:var(--border-hover);background:var(--bg-card-hover);transform:translateY(-2px);}
+    .post-card:hover .card-img img{transform:scale(1.03);}
+    .card-img{width:100%;height:180px;overflow:hidden;position:relative;background:var(--bg-card-hover);}
+    .card-img img{width:100%;height:100%;object-fit:cover;transition:transform .4s;}
+    .card-img .card-badge{position:absolute;top:.6rem;left:.6rem;padding:.2rem .55rem;border-radius:5px;font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.04em;background:rgba(34,197,94,0.9);color:#000;}
+    .card-no-img{padding:1.2rem 1.2rem 0;}
+    .card-no-img .card-badge{display:inline-block;padding:.2rem .55rem;border-radius:5px;font-size:.7rem;font-weight:600;text-transform:uppercase;background:rgba(34,197,94,0.9);color:#000;}
+    .card-body{padding:1rem 1.2rem 1.2rem;}
+    .card-meta{display:flex;align-items:center;gap:.8rem;margin-bottom:.5rem;font-size:.78rem;color:var(--text-muted);}
+    .post-card h2{font-size:1.05rem;font-weight:600;line-height:1.35;margin-bottom:.4rem;}
+    .post-card .excerpt{color:var(--text-sec);font-size:.88rem;line-height:1.55;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+    .read-more{display:inline-flex;align-items:center;gap:.3rem;margin-top:.8rem;color:var(--accent);font-weight:600;font-size:.82rem;transition:gap var(--t);}
+    .read-more:hover{gap:.5rem;}
 
-    .loading-posts { text-align: center; padding: 3rem; color: var(--text-muted); grid-column: 1 / -1; }
-    .no-posts { text-align: center; padding: 3rem; color: var(--text-muted); grid-column: 1 / -1; }
+    .loading-posts,.no-posts{text-align:center;padding:3rem;color:var(--text-muted);grid-column:1/-1;}
 
     /* Newsletter */
-    .newsletter {
-      max-width: 600px; margin: 0 auto 4rem; padding: 2.5rem;
-      background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: var(--radius-lg); text-align: center;
-      transition: background 0.3s ease;
-    }
-    .newsletter h3 { font-size: 1.3rem; font-weight: 600; margin-bottom: 0.4rem; }
-    .newsletter p { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1.5rem; }
-    .newsletter-form { display: flex; gap: 0.5rem; max-width: 400px; margin: 0 auto; }
-    .newsletter-form input {
-      flex: 1; padding: 0.7rem 1rem; border-radius: 8px; border: 1px solid var(--border);
-      background: var(--bg); color: var(--text); font-family: inherit; font-size: 0.9rem;
-      outline: none; transition: border-color var(--transition), background 0.3s ease;
-    }
-    .newsletter-form input:focus { border-color: var(--accent); }
-    .newsletter-form button {
-      padding: 0.7rem 1.5rem; border-radius: 8px; border: none; background: var(--accent);
-      color: #000; font-family: inherit; font-weight: 600; font-size: 0.9rem;
-      cursor: pointer; transition: opacity var(--transition); white-space: nowrap;
-    }
-    .newsletter-form button:hover { opacity: 0.9; }
+    .newsletter{max-width:560px;margin:0 auto 3rem;padding:2rem;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r);text-align:center;transition:background .3s;}
+    .newsletter h3{font-size:1.2rem;font-weight:600;margin-bottom:.3rem;}
+    .newsletter p{color:var(--text-sec);font-size:.88rem;margin-bottom:1.2rem;}
+    .newsletter-form{display:flex;gap:.4rem;max-width:380px;margin:0 auto;}
+    .newsletter-form input{flex:1;padding:.6rem .9rem;border-radius:8px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-family:inherit;font-size:.88rem;outline:none;transition:border-color var(--t);}
+    .newsletter-form input:focus{border-color:var(--accent);}
+    .newsletter-form button{padding:.6rem 1.2rem;border-radius:8px;border:none;background:var(--accent);color:#000;font-family:inherit;font-weight:600;font-size:.88rem;cursor:pointer;white-space:nowrap;}
 
     /* Footer */
-    footer { border-top: 1px solid var(--border); padding: 2rem 1.5rem; text-align: center; }
-    .footer-inner { max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 0.8rem; }
-    .footer-links { display: flex; gap: 1.5rem; list-style: none; }
-    .footer-links a { color: var(--text-muted); font-size: 0.85rem; transition: color var(--transition); }
-    .footer-links a:hover { color: var(--text-secondary); }
-    .footer-copy { color: var(--text-muted); font-size: 0.8rem; }
+    footer{border-top:1px solid var(--border);padding:1.5rem;text-align:center;}
+    .footer-inner{max-width:1100px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:.6rem;}
+    .footer-links{display:flex;gap:1.5rem;list-style:none;}
+    .footer-links a{color:var(--text-muted);font-size:.82rem;transition:color var(--t);}
+    .footer-links a:hover{color:var(--text-sec);}
+    .footer-copy{color:var(--text-muted);font-size:.78rem;}
 
-    /* Post Detail View */
-    .post-detail { display: none; max-width: 800px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
-    .post-detail .back-link { display: inline-flex; align-items: center; gap: 0.3rem; color: var(--accent); font-weight: 600; font-size: 0.9rem; margin-bottom: 2rem; cursor: pointer; }
-    .post-detail .back-link:hover { gap: 0.6rem; }
-    .post-detail h1 { font-size: clamp(1.6rem, 3.5vw, 2.4rem); font-weight: 700; line-height: 1.25; margin-bottom: 0.75rem; }
-    .post-detail .detail-meta { display: flex; gap: 1rem; color: var(--text-muted); font-size: 0.85rem; margin-bottom: 2rem; flex-wrap: wrap; }
-    .post-detail .detail-badge { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 5px; font-size: 0.72rem; font-weight: 600; text-transform: uppercase; background: rgba(34,197,94,0.9); color: #000; }
-    .post-detail .content { color: var(--text-secondary); font-size: 1rem; line-height: 1.8; }
-    .post-detail .content h1, .post-detail .content h2, .post-detail .content h3 { color: var(--text); margin: 1.5rem 0 0.75rem; }
-    .post-detail .content h2 { font-size: 1.4rem; }
-    .post-detail .content h3 { font-size: 1.15rem; }
-    .post-detail .content p { margin-bottom: 1rem; }
-    .post-detail .content ul, .post-detail .content ol { margin: 0.5rem 0 1rem 1.5rem; }
-    .post-detail .content li { margin-bottom: 0.3rem; }
-    .post-detail .content code { background: var(--bg-card); padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.9em; }
-    .post-detail .content blockquote { border-left: 3px solid var(--accent); padding-left: 1rem; color: var(--text-muted); margin: 1rem 0; }
-    .post-detail .content table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
-    .post-detail .content th, .post-detail .content td { padding: 0.6rem 1rem; border: 1px solid var(--border); text-align: left; }
-    .post-detail .content th { background: var(--bg-card); font-weight: 600; color: var(--text); }
-    .post-detail .content strong { color: var(--text); }
-    .post-detail .content a { color: var(--accent); }
+    /* Post Detail */
+    .post-detail{display:none;max-width:760px;margin:0 auto;padding:2rem 1.5rem 4rem;}
+    .back-link{display:inline-flex;align-items:center;gap:.3rem;color:var(--accent);font-weight:600;font-size:.88rem;margin-bottom:1.5rem;cursor:pointer;}
+    .back-link:hover{gap:.5rem;}
+    .detail-img{width:100%;max-height:400px;object-fit:cover;border-radius:var(--r);margin-bottom:1.5rem;}
+    .post-detail h1{font-size:clamp(1.5rem,3.5vw,2.2rem);font-weight:700;line-height:1.25;margin-bottom:.6rem;}
+    .detail-meta{display:flex;gap:.8rem;color:var(--text-muted);font-size:.82rem;margin-bottom:1.5rem;flex-wrap:wrap;align-items:center;}
+    .detail-badge{display:inline-block;padding:.15rem .5rem;border-radius:5px;font-size:.7rem;font-weight:600;text-transform:uppercase;background:rgba(34,197,94,0.9);color:#000;}
+    .content{color:var(--text-sec);font-size:1rem;line-height:1.8;}
+    .content h1,.content h2,.content h3{color:var(--text);margin:1.5rem 0 .6rem;}
+    .content h2{font-size:1.3rem;}
+    .content h3{font-size:1.1rem;}
+    .content p{margin-bottom:1rem;}
+    .content ul,.content ol{margin:.5rem 0 1rem 1.5rem;}
+    .content li{margin-bottom:.3rem;}
+    .content code{background:var(--bg-card);padding:.1rem .35rem;border-radius:4px;font-size:.9em;}
+    .content blockquote{border-left:3px solid var(--accent);padding-left:1rem;color:var(--text-muted);margin:1rem 0;}
+    .content table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.92rem;}
+    .content th,.content td{padding:.5rem .8rem;border:1px solid var(--border);text-align:left;}
+    .content th{background:var(--bg-card);font-weight:600;color:var(--text);}
+    .content strong{color:var(--text);}
+    .content a{color:var(--accent);}
+    .content img{max-width:100%;border-radius:8px;margin:1rem 0;}
+    .content hr{border:none;border-top:1px solid var(--border);margin:2rem 0;}
 
     /* Responsive */
-    @media (max-width: 768px) {
-      .nav-links, .nav-right .theme-toggle { display: none; }
-      .hamburger { display: block; }
-      .hero { padding: 2.5rem 1.2rem 1.5rem; }
-      .blog-grid { grid-template-columns: 1fr; padding: 1rem 1.2rem 3rem; }
-      .categories { padding: 0.5rem 1.2rem 1rem; overflow-x: auto; flex-wrap: nowrap; -webkit-overflow-scrolling: touch; }
-      .newsletter { margin: 0 1.2rem 3rem; padding: 2rem 1.2rem; }
-      .newsletter-form { flex-direction: column; }
-      .post-detail { padding: 1.5rem 1.2rem 3rem; }
+    @media(max-width:768px){
+      .nav-links,.nav-right .theme-toggle{display:none;}
+      .hamburger{display:block;}
+      .hero{padding:2rem 1rem 1rem;}
+      .blog-grid{grid-template-columns:1fr;padding:.8rem 1rem 2.5rem;gap:1rem;}
+      .categories{padding:.3rem 1rem 1rem;overflow-x:auto;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;gap:.35rem;}
+      .cat-btn{font-size:.78rem;padding:.3rem .75rem;}
+      .card-img{height:160px;}
+      .newsletter{margin:0 1rem 2.5rem;padding:1.5rem 1rem;}
+      .newsletter-form{flex-direction:column;}
+      .post-detail{padding:1.5rem 1rem 3rem;}
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(12px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+    @keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
   </style>
 </head>
 <body>
 
   <nav>
     <div class="nav-inner">
-      <a href="https://autarkie-finder.com" class="logo">
-        <div class="logo-dot"></div>
-        Autarkie-Finder
-      </a>
+      <a href="https://autarkie-finder.com" class="logo"><div class="logo-dot"></div>Autarkie-Finder</a>
       <div class="nav-right">
         <ul class="nav-links">
           <li><a href="https://autarkie-finder.com">Start</a></li>
@@ -270,13 +183,9 @@
           <li><a href="/" class="active">Blog</a></li>
           <li><a href="https://autarkie-finder.com/faq">FAQ</a></li>
         </ul>
-        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Theme wechseln">
-          <div class="toggle-dot"></div>
-        </button>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Theme"><div class="toggle-dot"></div></button>
       </div>
-      <button class="hamburger" onclick="toggleMenu()" aria-label="Menü">
-        <span></span><span></span><span></span>
-      </button>
+      <button class="hamburger" onclick="toggleMenu()" aria-label="Menü"><span></span><span></span><span></span></button>
     </div>
   </nav>
 
@@ -288,14 +197,11 @@
     <a href="/">Blog</a>
     <a href="https://autarkie-finder.com/faq">FAQ</a>
     <div class="mobile-theme">
-      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Theme wechseln">
-        <div class="toggle-dot"></div>
-      </button>
-      <span id="mobileThemeLabel">Heller Modus</span>
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Theme"><div class="toggle-dot"></div></button>
+      <span id="mobileThemeLabel">Hell</span>
     </div>
   </div>
 
-  <!-- Blog List View -->
   <div id="blogView">
     <section class="hero">
       <span class="hero-label">Blog</span>
@@ -303,7 +209,7 @@
       <p>Praxiswissen und Anleitungen rund um Solarenergie, Speicher, Selbstversorgung und autarkes Wohnen.</p>
     </section>
 
-    <div class="categories" id="categoryBar">
+    <div class="categories">
       <button class="cat-btn active" onclick="filterPosts('alle')">Alle</button>
       <button class="cat-btn" onclick="filterPosts('energie')">Energie</button>
       <button class="cat-btn" onclick="filterPosts('wasser')">Wasser</button>
@@ -319,15 +225,14 @@
 
     <section class="newsletter">
       <h3>Newsletter</h3>
-      <p>Erhalte die besten Tipps für autarkes Leben direkt in dein Postfach.</p>
+      <p>Die besten Tipps für autarkes Leben – direkt in dein Postfach.</p>
       <div class="newsletter-form">
-        <input type="email" placeholder="deine@email.de" aria-label="E-Mail Adresse">
+        <input type="email" placeholder="deine@email.de" aria-label="E-Mail">
         <button type="button">Abonnieren</button>
       </div>
     </section>
   </div>
 
-  <!-- Post Detail View -->
   <div class="post-detail" id="postDetail">
     <a class="back-link" onclick="showBlogList()">&larr; Zurück zum Blog</a>
     <div id="postDetailContent"></div>
@@ -339,209 +244,157 @@
         <li><a href="https://autarkie-finder.com/impressum">Impressum</a></li>
         <li><a href="https://autarkie-finder.com/datenschutz">Datenschutz</a></li>
       </ul>
-      <p class="footer-copy">&copy; 2026 Autarkie-Finder &middot; Alle Rechte vorbehalten</p>
+      <p class="footer-copy">&copy; 2026 Autarkie-Finder</p>
     </div>
   </footer>
 
   <script>
-    var REPO = 'ecdyn/autarkie-finder-blog';
-    var BRANCH = 'main';
-    var allPosts = [];
-    var currentFilter = 'alle';
+    var REPO='ecdyn/autarkie-finder-blog',BRANCH='main',allPosts=[],currentFilter='alle';
+    var catLabels={energie:'Energie',wasser:'Wasser',ernaehrung:'Ernährung',wohnen:'Wohnen',offgrid:'Off-Grid',technik:'Technik'};
+    var months=['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
 
-    var categoryLabels = {
-      energie: 'Energie', wasser: 'Wasser', ernaehrung: 'Ernährung',
-      wohnen: 'Wohnen', offgrid: 'Off-Grid', technik: 'Technik'
-    };
+    function fmtDate(d){var x=new Date(d);return x.getDate()+'. '+months[x.getMonth()]+' '+x.getFullYear();}
 
-    var months = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
-
-    function formatDate(dateStr) {
-      var d = new Date(dateStr);
-      return d.getDate() + '. ' + months[d.getMonth()] + ' ' + d.getFullYear();
+    function parseFM(txt){
+      var p=txt.split('---');
+      if(p.length<3)return{m:{},b:txt};
+      var f=p[1],b=p.slice(2).join('---').trim(),m={};
+      f.split('\n').forEach(function(l){var x=l.match(/^(\w+):\s*"?(.+?)"?\s*$/);if(x)m[x[1]]=x[2];});
+      return{m:m,b:b};
     }
 
-    function parseFrontmatter(text) {
-      var parts = text.split('---');
-      if (parts.length < 3) return { meta: {}, body: text };
-      var front = parts[1];
-      var body = parts.slice(2).join('---').trim();
-      var meta = {};
-      front.split('\n').forEach(function(line) {
-        var m = line.match(/^(\w+):\s*"?(.+?)"?\s*$/);
-        if (m) meta[m[1]] = m[2];
+    function md2html(s){
+      var h=s;
+      h=h.replace(/^### (.+)$/gm,'<h3>$1</h3>');
+      h=h.replace(/^## (.+)$/gm,'<h2>$1</h2>');
+      h=h.replace(/^# (.+)$/gm,'<h1>$1</h1>');
+      h=h.replace(/!\[([^\]]*)\]\(([^)]+)\)/g,'<img src="$2" alt="$1" loading="lazy">');
+      h=h.replace(/\[(.+?)\]\((.+?)\)/g,'<a href="$2">$1</a>');
+      h=h.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');
+      h=h.replace(/\*(.+?)\*/g,'<em>$1</em>');
+      h=h.replace(/`(.+?)`/g,'<code>$1</code>');
+      h=h.replace(/^> (.+)$/gm,'<blockquote>$1</blockquote>');
+      h=h.replace(/^- (.+)$/gm,'<li>$1</li>');
+      h=h.replace(/(<li>.*<\/li>\n?)+/g,'<ul>$&</ul>');
+      h=h.replace(/^\d+\. (.+)$/gm,'<li>$1</li>');
+      h=h.replace(/^\|(.+)\|$/gm,function(match,c){
+        var cells=c.split('|').map(function(x){return x.trim();});
+        if(cells.every(function(x){return/^[-:]+$/.test(x);}))return'';
+        return'<tr>'+cells.map(function(x){return'<td>'+x+'</td>';}).join('')+'</tr>';
       });
-      return { meta: meta, body: body };
+      h=h.replace(/(<tr>.*<\/tr>\n?)+/g,'<table>$&</table>');
+      h=h.replace(/^---$/gm,'<hr>');
+      h=h.replace(/^(?!<[hultbaoip])((?!<).+)$/gm,'<p>$1</p>');
+      h=h.replace(/<p><\/p>/g,'');
+      return h;
     }
 
-    function markdownToHTML(md) {
-      var html = md;
-      // Headers
-      html = html.replace(/^### (.+)$/gm, '<h3>$1</h3>');
-      html = html.replace(/^## (.+)$/gm, '<h2>$1</h2>');
-      html = html.replace(/^# (.+)$/gm, '<h1>$1</h1>');
-      // Bold & italic
-      html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-      html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
-      // Links
-      html = html.replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2">$1</a>');
-      // Code
-      html = html.replace(/`(.+?)`/g, '<code>$1</code>');
-      // Blockquote
-      html = html.replace(/^> (.+)$/gm, '<blockquote>$1</blockquote>');
-      // Unordered list
-      html = html.replace(/^- (.+)$/gm, '<li>$1</li>');
-      html = html.replace(/(<li>.*<\/li>\n?)+/g, '<ul>$&</ul>');
-      // Ordered list
-      html = html.replace(/^\d+\. (.+)$/gm, '<li>$1</li>');
-      // Tables
-      html = html.replace(/^\|(.+)\|$/gm, function(match, content) {
-        var cells = content.split('|').map(function(c) { return c.trim(); });
-        if (cells.every(function(c) { return /^[-:]+$/.test(c); })) return '';
-        var tag = 'td';
-        var row = cells.map(function(c) { return '<' + tag + '>' + c + '</' + tag + '>'; }).join('');
-        return '<tr>' + row + '</tr>';
-      });
-      html = html.replace(/(<tr>.*<\/tr>\n?)+/g, '<table>$&</table>');
-      // Paragraphs
-      html = html.replace(/^(?!<[hultbao])((?!<).+)$/gm, '<p>$1</p>');
-      // Clean empty lines
-      html = html.replace(/<p><\/p>/g, '');
-      // HR
-      html = html.replace(/^---$/gm, '<hr>');
-      return html;
-    }
-
-    async function loadPosts() {
-      var grid = document.getElementById('blogGrid');
-      try {
-        var res = await fetch('https://api.github.com/repos/' + REPO + '/contents/_posts?ref=' + BRANCH);
-        if (res.status === 404) {
-          grid.innerHTML = '<div class="no-posts">Noch keine Beiträge vorhanden.</div>';
-          return;
-        }
-        var files = await res.json();
-        if (!Array.isArray(files) || !files.length) {
-          grid.innerHTML = '<div class="no-posts">Noch keine Beiträge vorhanden.</div>';
-          return;
-        }
-
-        // Load each post content
-        var posts = [];
-        for (var i = 0; i < files.length; i++) {
-          var f = files[i];
-          if (!f.name.endsWith('.md')) continue;
-          var contentRes = await fetch('https://api.github.com/repos/' + REPO + '/contents/' + f.path + '?ref=' + BRANCH);
-          var contentData = await contentRes.json();
-          var decoded = decodeURIComponent(escape(atob(contentData.content.replace(/\n/g, ''))));
-          var parsed = parseFrontmatter(decoded);
+    async function loadPosts(){
+      var g=document.getElementById('blogGrid');
+      try{
+        var r=await fetch('https://api.github.com/repos/'+REPO+'/contents/_posts?ref='+BRANCH);
+        if(r.status===404){g.innerHTML='<div class="no-posts">Noch keine Beiträge.</div>';return;}
+        var files=await r.json();
+        if(!Array.isArray(files)||!files.length){g.innerHTML='<div class="no-posts">Noch keine Beiträge.</div>';return;}
+        var posts=[];
+        for(var i=0;i<files.length;i++){
+          var f=files[i];if(!f.name.endsWith('.md'))continue;
+          var cr=await fetch('https://api.github.com/repos/'+REPO+'/contents/'+f.path+'?ref='+BRANCH);
+          var cd=await cr.json();
+          var dec=decodeURIComponent(escape(atob(cd.content.replace(/\n/g,''))));
+          var p=parseFM(dec);
           posts.push({
-            filename: f.name,
-            path: f.path,
-            title: parsed.meta.title || f.name.replace(/^\d{4}-\d{2}-\d{2}-/, '').replace('.md', '').replace(/-/g, ' '),
-            date: parsed.meta.date || f.name.substring(0, 10),
-            category: parsed.meta.category || 'energie',
-            description: parsed.meta.description || '',
-            reading_time: parsed.meta.reading_time || '5',
-            body: parsed.body
+            fn:f.name,path:f.path,
+            title:p.m.title||f.name.replace(/^\d{4}-\d{2}-\d{2}-/,'').replace('.md','').replace(/-/g,' '),
+            date:p.m.date||f.name.substring(0,10),
+            category:p.m.category||'energie',
+            description:p.m.description||'',
+            reading_time:p.m.reading_time||'5',
+            image:p.m.image||'',
+            image_alt:p.m.image_alt||'',
+            keywords:p.m.keywords||'',
+            body:p.b
           });
         }
-
-        // Sort newest first
-        posts.sort(function(a, b) { return b.date.localeCompare(a.date); });
-        allPosts = posts;
+        posts.sort(function(a,b){return b.date.localeCompare(a.date);});
+        allPosts=posts;
         renderPosts(posts);
-
-      } catch (e) {
-        grid.innerHTML = '<div class="no-posts">Fehler beim Laden der Beiträge.</div>';
-        console.error(e);
-      }
+      }catch(e){g.innerHTML='<div class="no-posts">Fehler beim Laden.</div>';console.error(e);}
     }
 
-    function renderPosts(posts) {
-      var grid = document.getElementById('blogGrid');
-
-      if (!posts.length) {
-        grid.innerHTML = '<div class="no-posts">Keine Beiträge in dieser Kategorie.</div>';
-        return;
-      }
-
-      grid.innerHTML = '';
-      posts.forEach(function(post, i) {
-        var catLabel = categoryLabels[post.category] || post.category;
-        var card = document.createElement('article');
-        card.className = 'post-card';
-        card.setAttribute('data-category', post.category);
-        card.style.animationDelay = (i * 0.05) + 's';
-        card.innerHTML =
-          '<div class="post-badge-wrap"><span class="post-badge">' + catLabel + '</span></div>' +
-          '<div class="post-body">' +
-            '<div class="post-meta">' +
-              '<span>' + formatDate(post.date) + '</span>' +
-              '<span>' + post.reading_time + ' Min. Lesezeit</span>' +
-            '</div>' +
-            '<h2>' + post.title + '</h2>' +
-            '<p class="excerpt">' + (post.description || post.body.substring(0, 160) + '...') + '</p>' +
-            '<span class="read-more">Weiterlesen &rarr;</span>' +
+    function renderPosts(posts){
+      var g=document.getElementById('blogGrid');
+      if(!posts.length){g.innerHTML='<div class="no-posts">Keine Beiträge in dieser Kategorie.</div>';return;}
+      g.innerHTML='';
+      posts.forEach(function(post,i){
+        var cl=catLabels[post.category]||post.category;
+        var c=document.createElement('article');
+        c.className='post-card';
+        c.setAttribute('data-category',post.category);
+        c.style.animationDelay=(i*0.05)+'s';
+        var imgHTML='';
+        if(post.image){
+          imgHTML='<div class="card-img"><img src="'+post.image+'" alt="'+(post.image_alt||post.title)+'" loading="lazy"><span class="card-badge">'+cl+'</span></div>';
+        }else{
+          imgHTML='<div class="card-no-img"><span class="card-badge">'+cl+'</span></div>';
+        }
+        c.innerHTML=imgHTML+
+          '<div class="card-body">'+
+            '<div class="card-meta"><span>'+fmtDate(post.date)+'</span><span>'+post.reading_time+' Min.</span></div>'+
+            '<h2>'+post.title+'</h2>'+
+            '<p class="excerpt">'+(post.description||post.body.substring(0,140)+'...')+'</p>'+
+            '<span class="read-more">Weiterlesen &rarr;</span>'+
           '</div>';
-        card.onclick = function() { showPost(post); };
-        grid.appendChild(card);
+        c.onclick=function(){showPost(post);};
+        g.appendChild(c);
       });
     }
 
-    function filterPosts(category) {
-      currentFilter = category;
-      document.querySelectorAll('.cat-btn').forEach(function(b) { b.classList.remove('active'); });
+    function filterPosts(cat){
+      currentFilter=cat;
+      document.querySelectorAll('.cat-btn').forEach(function(b){b.classList.remove('active');});
       event.target.classList.add('active');
-      if (category === 'alle') {
-        renderPosts(allPosts);
-      } else {
-        renderPosts(allPosts.filter(function(p) { return p.category === category; }));
-      }
+      renderPosts(cat==='alle'?allPosts:allPosts.filter(function(p){return p.category===cat;}));
     }
 
-    function showPost(post) {
-      var catLabel = categoryLabels[post.category] || post.category;
-      document.getElementById('blogView').style.display = 'none';
-      document.getElementById('postDetail').style.display = 'block';
-      document.getElementById('postDetailContent').innerHTML =
-        '<h1>' + post.title + '</h1>' +
-        '<div class="detail-meta">' +
-          '<span class="detail-badge">' + catLabel + '</span>' +
-          '<span>' + formatDate(post.date) + '</span>' +
-          '<span>' + post.reading_time + ' Min. Lesezeit</span>' +
-          '<span>Von ' + 'Autarkie-Finder' + '</span>' +
-        '</div>' +
-        '<div class="content">' + markdownToHTML(post.body) + '</div>';
-      window.scrollTo(0, 0);
+    function showPost(post){
+      var cl=catLabels[post.category]||post.category;
+      document.getElementById('blogView').style.display='none';
+      document.getElementById('postDetail').style.display='block';
+      var imgHTML=post.image?'<img class="detail-img" src="'+post.image+'" alt="'+(post.image_alt||post.title)+'" loading="lazy">':'';
+      document.getElementById('postDetailContent').innerHTML=
+        imgHTML+
+        '<h1>'+post.title+'</h1>'+
+        '<div class="detail-meta">'+
+          '<span class="detail-badge">'+cl+'</span>'+
+          '<span>'+fmtDate(post.date)+'</span>'+
+          '<span>'+post.reading_time+' Min. Lesezeit</span>'+
+          '<span>Von Autarkie-Finder</span>'+
+        '</div>'+
+        '<div class="content">'+md2html(post.body)+'</div>';
+      window.scrollTo(0,0);
+      // Update page title for SEO
+      document.title=post.title+' – Autarkie-Finder Blog';
     }
 
-    function showBlogList() {
-      document.getElementById('postDetail').style.display = 'none';
-      document.getElementById('blogView').style.display = 'block';
-      window.scrollTo(0, 0);
+    function showBlogList(){
+      document.getElementById('postDetail').style.display='none';
+      document.getElementById('blogView').style.display='block';
+      document.title='Blog – Autarkie-Finder | Tipps für autarkes Leben';
+      window.scrollTo(0,0);
     }
 
-    // Theme
-    function toggleTheme() {
-      var c = document.documentElement.getAttribute('data-theme');
-      var n = c === 'dark' ? 'light' : 'dark';
-      document.documentElement.setAttribute('data-theme', n);
-      localStorage.setItem('theme', n);
-      var l = document.getElementById('mobileThemeLabel');
-      if (l) l.textContent = n === 'dark' ? 'Heller Modus' : 'Dunkler Modus';
+    function toggleTheme(){
+      var c=document.documentElement.getAttribute('data-theme'),n=c==='dark'?'light':'dark';
+      document.documentElement.setAttribute('data-theme',n);
+      localStorage.setItem('theme',n);
+      var l=document.getElementById('mobileThemeLabel');
+      if(l)l.textContent=n==='dark'?'Hell':'Dunkel';
     }
-    (function() {
-      var l = document.getElementById('mobileThemeLabel');
-      if (l) l.textContent = document.documentElement.getAttribute('data-theme') === 'dark' ? 'Heller Modus' : 'Dunkler Modus';
-    })();
+    (function(){var l=document.getElementById('mobileThemeLabel');if(l)l.textContent=document.documentElement.getAttribute('data-theme')==='dark'?'Hell':'Dunkel';})();
 
-    // Mobile menu
-    function toggleMenu() {
-      document.getElementById('mobileMenu').classList.toggle('open');
-    }
+    function toggleMenu(){document.getElementById('mobileMenu').classList.toggle('open');}
 
-    // Load posts on page load
     loadPosts();
   </script>
 
