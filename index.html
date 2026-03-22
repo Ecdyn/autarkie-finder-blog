@@ -8,7 +8,6 @@
   <meta name="keywords" content="Autarkie, Selbstversorgung, Solarenergie, Regenwasser, Off-Grid, nachhaltig leben, autark wohnen">
   <meta name="author" content="Autarkie-Finder">
   <meta name="robots" content="index, follow">
-  <meta name="google-site-verification" content="ROUVyg_Kkdpuh65Iz7vjHo4dZzqyqsDqeJ78XvqBMG4" />
   <link rel="canonical" href="https://blog.autarkie-finder.com">
 
   <!-- Security -->
@@ -360,6 +359,16 @@
           var cd=await cr.json();
           var dec=decodeURIComponent(escape(atob(cd.content.replace(/\n/g,''))));
           var p=parseFM(dec);
+
+          // Check post status - skip drafts and future scheduled posts
+          var postStatus = p.m.status || 'publish';
+          if (postStatus === 'draft') continue;
+          if (postStatus === 'scheduled') {
+            var pubDate = p.m.publish_date || '';
+            var pubTime = p.m.publish_time || '08:00';
+            if (pubDate && new Date(pubDate + 'T' + pubTime) > new Date()) continue;
+          }
+
           posts.push({
             fn:f.name,path:f.path,
             title:p.m.title||f.name.replace(/^\d{4}-\d{2}-\d{2}-/,'').replace('.md','').replace(/-/g,' '),
