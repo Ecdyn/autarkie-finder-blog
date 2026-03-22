@@ -60,4 +60,16 @@
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
+  <url>
+    <loc>https://blog.autarkie-finder.com/fruehlingscheck-fuer-deine-solaranlage-5-schritte-fuer-mehr-ertrag</loc>
+    <lastmod>2026-03-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://blog.autarkie-finder.com/blackout-vorsorge-so-bist-du-bei-einem-stromausfall-vorbereitet</loc>
+    <lastmod>2026-03-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
 </urlset>
