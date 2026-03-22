@@ -7,40 +7,94 @@
   <title>Autarkie-Finder CMS</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: -apple-system, sans-serif; background: #0a0a0a; color: #e5e5e5; min-height: 100vh; }
-    .login { display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-    .login-box { text-align: center; max-width: 400px; padding: 2rem; }
-    .login-box h1 { font-size: 1.5rem; margin-bottom: 0.5rem; }
-    .login-box p { color: #888; margin-bottom: 1.5rem; font-size: 0.9rem; }
-    .login-box input { width: 100%; padding: 0.8rem 1rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: #1a1a1a; color: #e5e5e5; font-size: 0.95rem; margin-bottom: 1rem; outline: none; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #0a0a0a; color: #e5e5e5; min-height: 100vh; }
+
+    /* Login */
+    .login { display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 1.5rem; }
+    .login-box { text-align: center; width: 100%; max-width: 400px; }
+    .login-box h1 { font-size: 1.4rem; margin-bottom: 0.3rem; }
+    .login-box .subtitle { color: #888; margin-bottom: 1.5rem; font-size: 0.88rem; }
+    .login-box input { width: 100%; padding: 0.75rem 1rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: #1a1a1a; color: #e5e5e5; font-size: 0.92rem; margin-bottom: 0.8rem; outline: none; font-family: inherit; }
     .login-box input:focus { border-color: #22c55e; }
-    .btn { width: 100%; padding: 0.8rem; border-radius: 8px; border: none; background: #22c55e; color: #000; font-weight: 600; font-size: 0.95rem; cursor: pointer; }
+
+    /* Buttons */
+    .btn { padding: 0.7rem 1.5rem; border-radius: 8px; border: none; background: #22c55e; color: #000; font-weight: 600; font-size: 0.9rem; cursor: pointer; font-family: inherit; transition: opacity 0.2s; }
     .btn:hover { opacity: 0.9; }
+    .btn-full { width: 100%; }
+    .btn-sm { padding: 0.5rem 1rem; font-size: 0.82rem; }
+    .btn-secondary { background: #2a2a2a; color: #e5e5e5; }
+    .btn-secondary:hover { background: #333; }
+    .btn-danger { background: #dc2626; color: #fff; }
+    .btn-danger:hover { background: #b91c1c; }
+
+    /* CMS Layout */
     .cms { display: none; }
-    .cms-header { background: #111; border-bottom: 1px solid rgba(255,255,255,0.08); padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
-    .cms-header h2 { font-size: 1.1rem; }
-    .cms-header button { background: none; border: 1px solid rgba(255,255,255,0.15); color: #e5e5e5; padding: 0.4rem 1rem; border-radius: 6px; cursor: pointer; font-size: 0.85rem; }
-    .cms-body { max-width: 800px; margin: 2rem auto; padding: 0 1.5rem; }
-    .posts-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
-    .posts-header h3 { font-size: 1.2rem; }
-    .post-list { display: flex; flex-direction: column; gap: 0.8rem; }
-    .post-item { background: #111; border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 1rem 1.2rem; cursor: pointer; transition: border-color 0.2s; }
-    .post-item:hover { border-color: #22c55e; }
-    .post-item h4 { font-size: 1rem; margin-bottom: 0.3rem; }
-    .post-item span { font-size: 0.8rem; color: #666; }
+    .cms-header {
+      background: #111; border-bottom: 1px solid rgba(255,255,255,0.08);
+      padding: 0.8rem 1.5rem; display: flex; justify-content: space-between; align-items: center;
+      position: sticky; top: 0; z-index: 10;
+    }
+    .cms-header h2 { font-size: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+    .cms-header .logo-dot { width: 8px; height: 8px; background: #22c55e; border-radius: 50%; display: inline-block; }
+    .cms-body { max-width: 800px; margin: 0 auto; padding: 1.5rem; }
+
+    /* Status */
+    .status { padding: 0.7rem 1rem; border-radius: 8px; margin-bottom: 1rem; font-size: 0.88rem; display: none; }
+    .status.success { display: block; background: rgba(34,197,94,0.12); color: #22c55e; border: 1px solid rgba(34,197,94,0.25); }
+    .status.error { display: block; background: rgba(239,68,68,0.12); color: #ef4444; border: 1px solid rgba(239,68,68,0.25); }
+
+    /* Post List */
+    .posts-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem; gap: 1rem; flex-wrap: wrap; }
+    .posts-header h3 { font-size: 1.1rem; }
+    .post-list { display: flex; flex-direction: column; gap: 0.6rem; }
+    .post-item {
+      background: #111; border: 1px solid rgba(255,255,255,0.08); border-radius: 10px;
+      padding: 1rem 1.2rem; cursor: pointer; transition: border-color 0.2s;
+      display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+    }
+    .post-item:hover { border-color: rgba(255,255,255,0.2); }
+    .post-item-info h4 { font-size: 0.95rem; margin-bottom: 0.2rem; }
+    .post-item-info .meta { font-size: 0.78rem; color: #666; display: flex; gap: 0.8rem; flex-wrap: wrap; }
+    .post-item-info .cat-tag { background: rgba(34,197,94,0.15); color: #22c55e; padding: 0.1rem 0.5rem; border-radius: 4px; font-size: 0.72rem; font-weight: 600; text-transform: uppercase; }
+    .post-item-actions { display: flex; gap: 0.4rem; flex-shrink: 0; }
+
+    /* Editor */
     .editor { display: none; }
-    .editor label { display: block; font-size: 0.85rem; color: #aaa; margin-bottom: 0.3rem; margin-top: 1rem; }
-    .editor input, .editor select, .editor textarea { width: 100%; padding: 0.7rem 1rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: #1a1a1a; color: #e5e5e5; font-family: inherit; font-size: 0.9rem; outline: none; }
-    .editor input:focus, .editor select:focus, .editor textarea:focus { border-color: #22c55e; }
-    .editor textarea { min-height: 300px; resize: vertical; line-height: 1.6; }
-    .editor select { appearance: auto; }
-    .editor-actions { display: flex; gap: 0.8rem; margin-top: 1.5rem; }
-    .editor-actions .btn { width: auto; padding: 0.7rem 2rem; }
-    .btn-secondary { background: #333 !important; color: #e5e5e5 !important; }
-    .status { padding: 0.8rem 1.2rem; border-radius: 8px; margin-bottom: 1rem; font-size: 0.9rem; display: none; }
-    .status.success { display: block; background: rgba(34,197,94,0.15); color: #22c55e; border: 1px solid rgba(34,197,94,0.3); }
-    .status.error { display: block; background: rgba(239,68,68,0.15); color: #ef4444; border: 1px solid rgba(239,68,68,0.3); }
+    .editor-section { margin-bottom: 1.5rem; }
+    .editor-section-title { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: #22c55e; margin-bottom: 0.8rem; padding-bottom: 0.4rem; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .field { margin-bottom: 1rem; }
+    .field label { display: block; font-size: 0.82rem; color: #aaa; margin-bottom: 0.3rem; }
+    .field label .hint { font-weight: 400; color: #555; font-size: 0.78rem; }
+    .field input, .field select, .field textarea {
+      width: 100%; padding: 0.65rem 0.9rem; border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.1); background: #1a1a1a;
+      color: #e5e5e5; font-family: inherit; font-size: 0.9rem; outline: none;
+      transition: border-color 0.2s;
+    }
+    .field input:focus, .field select:focus, .field textarea:focus { border-color: #22c55e; }
+    .field select { appearance: auto; }
+    .field textarea { min-height: 350px; resize: vertical; line-height: 1.7; }
+    .field .char-count { font-size: 0.75rem; color: #555; margin-top: 0.2rem; text-align: right; }
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .image-preview { margin-top: 0.5rem; max-width: 100%; max-height: 200px; border-radius: 8px; display: none; }
+
+    .editor-actions { display: flex; gap: 0.8rem; margin-top: 1.5rem; flex-wrap: wrap; }
+    .editor-actions .btn { min-width: 140px; text-align: center; }
+
     .loading { color: #888; text-align: center; padding: 2rem; }
+    .empty { color: #555; text-align: center; padding: 3rem 1rem; font-size: 0.95rem; }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .cms-header { padding: 0.7rem 1rem; }
+      .cms-body { padding: 1rem; }
+      .field-row { grid-template-columns: 1fr; }
+      .post-item { flex-direction: column; align-items: flex-start; }
+      .post-item-actions { width: 100%; }
+      .post-item-actions .btn { flex: 1; text-align: center; }
+      .editor-actions { flex-direction: column; }
+      .editor-actions .btn { width: 100%; }
+    }
   </style>
 </head>
 <body>
@@ -49,17 +103,17 @@
   <div class="login" id="loginView">
     <div class="login-box">
       <h1>Autarkie-Finder CMS</h1>
-      <p>Gib deinen GitHub Token ein, um Blog-Beiträge zu verwalten.</p>
+      <p class="subtitle">Blog-Beiträge verwalten</p>
       <input type="password" id="tokenInput" placeholder="GitHub Token eingeben...">
-      <button class="btn" onclick="login()">Einloggen</button>
+      <button class="btn btn-full" onclick="login()">Einloggen</button>
     </div>
   </div>
 
   <!-- CMS -->
   <div class="cms" id="cmsView">
     <div class="cms-header">
-      <h2>Autarkie-Finder Blog</h2>
-      <button onclick="logout()">Abmelden</button>
+      <h2><span class="logo-dot"></span> Autarkie-Finder CMS</h2>
+      <button class="btn btn-sm btn-secondary" onclick="logout()">Abmelden</button>
     </div>
     <div class="cms-body">
       <div id="statusMsg" class="status"></div>
@@ -68,7 +122,7 @@
       <div id="postList">
         <div class="posts-header">
           <h3>Blog-Beiträge</h3>
-          <button class="btn" onclick="newPost()">+ Neuer Beitrag</button>
+          <button class="btn btn-sm" onclick="newPost()">+ Neuer Beitrag</button>
         </div>
         <div id="posts" class="post-list">
           <div class="loading">Beiträge werden geladen...</div>
@@ -79,36 +133,85 @@
       <div id="editor" class="editor">
         <div class="posts-header">
           <h3 id="editorTitle">Neuer Beitrag</h3>
-          <button class="btn btn-secondary" onclick="showList()">Zurück</button>
+          <button class="btn btn-sm btn-secondary" onclick="showList()">Zurück</button>
         </div>
 
-        <label>Titel</label>
-        <input type="text" id="postTitle" placeholder="Titel des Beitrags">
+        <!-- Beitrag -->
+        <div class="editor-section">
+          <div class="editor-section-title">Beitrag</div>
+          <div class="field">
+            <label>Titel</label>
+            <input type="text" id="postTitle" placeholder="Titel des Beitrags">
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label>Kategorie</label>
+              <select id="postCategory">
+                <option value="energie">Energie</option>
+                <option value="wasser">Wasser</option>
+                <option value="ernaehrung">Ernährung</option>
+                <option value="wohnen">Wohnen</option>
+                <option value="offgrid">Off-Grid</option>
+                <option value="technik">Technik</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Lesezeit (Minuten)</label>
+              <input type="number" id="postTime" value="5" min="1" max="60">
+            </div>
+          </div>
+          <div class="field">
+            <label>Inhalt <span class="hint">(Markdown-Format)</span></label>
+            <textarea id="postContent" placeholder="# Überschrift&#10;&#10;Dein Text hier...&#10;&#10;## Unterüberschrift&#10;&#10;- Aufzählung 1&#10;- Aufzählung 2&#10;&#10;**Fett** und *kursiv*"></textarea>
+          </div>
+        </div>
 
-        <label>Kategorie</label>
-        <select id="postCategory">
-          <option value="energie">Energie</option>
-          <option value="wasser">Wasser</option>
-          <option value="ernaehrung">Ernährung</option>
-          <option value="wohnen">Wohnen</option>
-          <option value="offgrid">Off-Grid</option>
-          <option value="technik">Technik</option>
-        </select>
+        <!-- Bild -->
+        <div class="editor-section">
+          <div class="editor-section-title">Beitragsbild</div>
+          <div class="field">
+            <label>Bild-URL <span class="hint">(Unsplash, eigenes Hosting, oder leer lassen)</span></label>
+            <input type="url" id="postImage" placeholder="https://images.unsplash.com/photo-..." oninput="previewImage()">
+            <img id="imagePreview" class="image-preview" alt="Vorschau">
+          </div>
+          <div class="field">
+            <label>Bild-Beschreibung (Alt-Text) <span class="hint">(wichtig für SEO & Barrierefreiheit)</span></label>
+            <input type="text" id="postImageAlt" placeholder="z.B. Solarpanels auf einem Einfamilienhaus">
+          </div>
+        </div>
 
-        <label>Beschreibung (SEO)</label>
-        <input type="text" id="postDesc" placeholder="Kurze Beschreibung für Google (max 160 Zeichen)">
-
-        <label>Lesezeit (Minuten)</label>
-        <input type="number" id="postTime" value="5" min="1" max="30">
-
-        <label>Inhalt (Markdown)</label>
-        <textarea id="postContent" placeholder="Schreibe deinen Beitrag in Markdown..."></textarea>
+        <!-- SEO -->
+        <div class="editor-section">
+          <div class="editor-section-title">SEO & Meta-Daten</div>
+          <div class="field">
+            <label>Meta-Beschreibung <span class="hint">(wird bei Google angezeigt, 120-160 Zeichen ideal)</span></label>
+            <input type="text" id="postDesc" placeholder="Kurze Beschreibung für Google..." oninput="updateCharCount('postDesc', 'descCount', 160)">
+            <div class="char-count" id="descCount">0 / 160</div>
+          </div>
+          <div class="field">
+            <label>SEO-Keywords <span class="hint">(kommagetrennt)</span></label>
+            <input type="text" id="postKeywords" placeholder="z.B. Solaranlage, Speicher, Autarkie, 2026">
+          </div>
+          <div class="field">
+            <label>URL-Slug <span class="hint">(wird automatisch generiert, optional anpassen)</span></label>
+            <input type="text" id="postSlug" placeholder="wird-automatisch-generiert">
+          </div>
+        </div>
 
         <div class="editor-actions">
           <button class="btn" onclick="savePost()">Veröffentlichen</button>
+          <button class="btn btn-secondary" onclick="previewPost()">Vorschau</button>
           <button class="btn btn-secondary" onclick="showList()">Abbrechen</button>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- Preview Modal -->
+  <div id="previewModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:100; overflow-y:auto; padding:2rem;">
+    <div style="max-width:700px; margin:0 auto; background:#111; border-radius:12px; padding:2rem; position:relative;">
+      <button onclick="document.getElementById('previewModal').style.display='none'" style="position:absolute;top:1rem;right:1rem;background:none;border:none;color:#888;font-size:1.5rem;cursor:pointer;">&times;</button>
+      <div id="previewContent" style="color:#ccc; line-height:1.7;"></div>
     </div>
   </div>
 
@@ -119,7 +222,8 @@
     var editingPath = null;
     var editingSha = null;
 
-    // Check saved token
+    var categoryLabels = { energie:'Energie', wasser:'Wasser', ernaehrung:'Ernährung', wohnen:'Wohnen', offgrid:'Off-Grid', technik:'Technik' };
+
     if (localStorage.getItem('gh_token')) {
       TOKEN = localStorage.getItem('gh_token');
       showCMS();
@@ -161,6 +265,26 @@
       setTimeout(function() { el.className = 'status'; }, 4000);
     }
 
+    function updateCharCount(inputId, countId, max) {
+      var len = document.getElementById(inputId).value.length;
+      var el = document.getElementById(countId);
+      el.textContent = len + ' / ' + max;
+      el.style.color = len > max ? '#ef4444' : len > max * 0.75 ? '#eab308' : '#555';
+    }
+
+    function previewImage() {
+      var url = document.getElementById('postImage').value.trim();
+      var img = document.getElementById('imagePreview');
+      if (url) { img.src = url; img.style.display = 'block'; img.onerror = function() { img.style.display = 'none'; }; }
+      else { img.style.display = 'none'; }
+    }
+
+    function generateSlug(title) {
+      return title.toLowerCase()
+        .replace(/[äÄ]/g,'ae').replace(/[öÖ]/g,'oe').replace(/[üÜ]/g,'ue').replace(/[ß]/g,'ss')
+        .replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+    }
+
     async function ghAPI(path, options) {
       var url = 'https://api.github.com/repos/' + REPO + path;
       var headers = { 'Authorization': 'token ' + TOKEN, 'Accept': 'application/vnd.github.v3+json' };
@@ -176,27 +300,46 @@
       try {
         var res = await ghAPI('/contents/_posts?ref=' + BRANCH);
         if (res.status === 404) {
-          container.innerHTML = '<p style="color:#888;text-align:center;padding:2rem;">Noch keine Beiträge. Erstelle deinen ersten!</p>';
+          container.innerHTML = '<div class="empty">Noch keine Beiträge. Erstelle deinen ersten!</div>';
           return;
         }
         var files = await res.json();
         if (!files.length) {
-          container.innerHTML = '<p style="color:#888;text-align:center;padding:2rem;">Noch keine Beiträge.</p>';
+          container.innerHTML = '<div class="empty">Noch keine Beiträge.</div>';
           return;
         }
         files.sort(function(a, b) { return b.name.localeCompare(a.name); });
         container.innerHTML = '';
-        files.forEach(function(f) {
+        for (var i = 0; i < files.length; i++) {
+          var f = files[i];
+          // Quick parse to get category
+          var contentRes = await ghAPI('/contents/' + f.path + '?ref=' + BRANCH);
+          var contentData = await contentRes.json();
+          var decoded = decodeURIComponent(escape(atob(contentData.content.replace(/\n/g, ''))));
+          var catMatch = decoded.match(/category:\s*(\w+)/);
+          var cat = catMatch ? catMatch[1] : '';
+          var catLabel = categoryLabels[cat] || cat;
+
           var name = f.name.replace(/^\d{4}-\d{2}-\d{2}-/, '').replace('.md', '').replace(/-/g, ' ');
           var date = f.name.substring(0, 10);
           var div = document.createElement('div');
           div.className = 'post-item';
-          div.innerHTML = '<h4>' + name.charAt(0).toUpperCase() + name.slice(1) + '</h4><span>' + date + '</span>';
-          div.onclick = function() { editPost(f.path, f.sha); };
+          div.innerHTML =
+            '<div class="post-item-info" onclick="editPost(\'' + f.path + '\')">' +
+              '<h4>' + name.charAt(0).toUpperCase() + name.slice(1) + '</h4>' +
+              '<div class="meta">' +
+                (catLabel ? '<span class="cat-tag">' + catLabel + '</span>' : '') +
+                '<span>' + date + '</span>' +
+              '</div>' +
+            '</div>' +
+            '<div class="post-item-actions">' +
+              '<button class="btn btn-sm btn-secondary" onclick="event.stopPropagation();editPost(\'' + f.path + '\')">Bearbeiten</button>' +
+              '<button class="btn btn-sm btn-danger" onclick="event.stopPropagation();deletePost(\'' + f.path + '\',\'' + contentData.sha + '\')">Löschen</button>' +
+            '</div>';
           container.appendChild(div);
-        });
+        }
       } catch (e) {
-        container.innerHTML = '<p style="color:#ef4444;">Fehler: ' + e.message + '</p>';
+        container.innerHTML = '<div class="empty" style="color:#ef4444;">Fehler: ' + e.message + '</div>';
       }
     }
 
@@ -209,37 +352,69 @@
       document.getElementById('postDesc').value = '';
       document.getElementById('postTime').value = '5';
       document.getElementById('postContent').value = '';
+      document.getElementById('postImage').value = '';
+      document.getElementById('postImageAlt').value = '';
+      document.getElementById('postKeywords').value = '';
+      document.getElementById('postSlug').value = '';
+      document.getElementById('imagePreview').style.display = 'none';
+      document.getElementById('descCount').textContent = '0 / 160';
       document.getElementById('postList').style.display = 'none';
       document.getElementById('editor').style.display = 'block';
+      window.scrollTo(0, 0);
     }
 
-    async function editPost(path, sha) {
+    async function editPost(path) {
       document.getElementById('postList').style.display = 'none';
       document.getElementById('editor').style.display = 'block';
       document.getElementById('editorTitle').textContent = 'Beitrag bearbeiten';
+      window.scrollTo(0, 0);
       try {
         var res = await ghAPI('/contents/' + path + '?ref=' + BRANCH);
         var data = await res.json();
-        var content = atob(data.content.replace(/\n/g, ''));
-        var decoded = decodeURIComponent(escape(content));
+        var content = decodeURIComponent(escape(atob(data.content.replace(/\n/g, ''))));
         editingPath = path;
         editingSha = data.sha;
-        var parts = decoded.split('---');
+        var parts = content.split('---');
         if (parts.length >= 3) {
           var front = parts[1];
           var body = parts.slice(2).join('---').trim();
-          var getValue = function(key) {
+          var gv = function(key) {
             var m = front.match(new RegExp(key + ':\\s*"?([^"\\n]*)"?'));
             return m ? m[1].trim() : '';
           };
-          document.getElementById('postTitle').value = getValue('title');
-          document.getElementById('postCategory').value = getValue('category');
-          document.getElementById('postDesc').value = getValue('description');
-          document.getElementById('postTime').value = getValue('reading_time') || '5';
+          document.getElementById('postTitle').value = gv('title');
+          document.getElementById('postCategory').value = gv('category') || 'energie';
+          document.getElementById('postDesc').value = gv('description');
+          document.getElementById('postTime').value = gv('reading_time') || '5';
+          document.getElementById('postImage').value = gv('image');
+          document.getElementById('postImageAlt').value = gv('image_alt');
+          document.getElementById('postKeywords').value = gv('keywords');
+          document.getElementById('postSlug').value = path.replace('_posts/', '').replace(/^\d{4}-\d{2}-\d{2}-/, '').replace('.md', '');
           document.getElementById('postContent').value = body;
+          previewImage();
+          updateCharCount('postDesc', 'descCount', 160);
         }
       } catch (e) {
         showStatus('Fehler beim Laden: ' + e.message, 'error');
+      }
+    }
+
+    async function deletePost(path, sha) {
+      if (!confirm('Beitrag wirklich löschen?')) return;
+      try {
+        var res = await ghAPI('/contents/' + path, {
+          method: 'DELETE',
+          body: JSON.stringify({ message: 'Beitrag gelöscht', sha: sha, branch: BRANCH })
+        });
+        if (res.ok) {
+          showStatus('Beitrag gelöscht!', 'success');
+          loadPosts();
+        } else {
+          var err = await res.json();
+          showStatus('Fehler: ' + (err.message || 'Unbekannt'), 'error');
+        }
+      } catch (e) {
+        showStatus('Fehler: ' + e.message, 'error');
       }
     }
 
@@ -249,35 +424,37 @@
       var desc = document.getElementById('postDesc').value.trim();
       var time = document.getElementById('postTime').value;
       var content = document.getElementById('postContent').value;
+      var image = document.getElementById('postImage').value.trim();
+      var imageAlt = document.getElementById('postImageAlt').value.trim();
+      var keywords = document.getElementById('postKeywords').value.trim();
+      var customSlug = document.getElementById('postSlug').value.trim();
 
       if (!title) { showStatus('Bitte Titel eingeben', 'error'); return; }
       if (!content) { showStatus('Bitte Inhalt eingeben', 'error'); return; }
+      if (!desc) { showStatus('Bitte SEO-Beschreibung eingeben', 'error'); return; }
 
       var now = new Date();
       var dateStr = now.toISOString().substring(0, 10);
-      var slug = title.toLowerCase().replace(/[äÄ]/g,'ae').replace(/[öÖ]/g,'oe').replace(/[üÜ]/g,'ue').replace(/[ß]/g,'ss').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+      var slug = customSlug || generateSlug(title);
 
-      var frontmatter = '---\n';
-      frontmatter += 'title: "' + title + '"\n';
-      frontmatter += 'date: ' + dateStr + '\n';
-      frontmatter += 'author: Autarkie-Finder\n';
-      frontmatter += 'category: ' + category + '\n';
-      frontmatter += 'description: "' + desc + '"\n';
-      frontmatter += 'reading_time: ' + time + '\n';
-      frontmatter += 'featured: false\n';
-      frontmatter += '---\n\n';
+      var fm = '---\n';
+      fm += 'title: "' + title.replace(/"/g, '\\"') + '"\n';
+      fm += 'date: ' + dateStr + '\n';
+      fm += 'author: Autarkie-Finder\n';
+      fm += 'category: ' + category + '\n';
+      fm += 'description: "' + desc.replace(/"/g, '\\"') + '"\n';
+      fm += 'reading_time: ' + time + '\n';
+      if (image) fm += 'image: "' + image + '"\n';
+      if (imageAlt) fm += 'image_alt: "' + imageAlt + '"\n';
+      if (keywords) fm += 'keywords: "' + keywords + '"\n';
+      fm += 'featured: false\n';
+      fm += '---\n\n';
 
-      var fullContent = frontmatter + content;
+      var fullContent = fm + content;
       var encoded = btoa(unescape(encodeURIComponent(fullContent)));
-
       var path = editingPath || '_posts/' + dateStr + '-' + slug + '.md';
 
-      var body = {
-        message: editingPath ? 'Update: ' + title : 'Neuer Beitrag: ' + title,
-        content: encoded,
-        branch: BRANCH
-      };
-
+      var body = { message: editingPath ? 'Update: ' + title : 'Neu: ' + title, content: encoded, branch: BRANCH };
       if (editingSha) body.sha = editingSha;
 
       try {
@@ -293,6 +470,24 @@
         showStatus('Fehler: ' + e.message, 'error');
       }
     }
+
+    function previewPost() {
+      var title = document.getElementById('postTitle').value || 'Ohne Titel';
+      var content = document.getElementById('postContent').value || '';
+      var image = document.getElementById('postImage').value || '';
+      var html = '<h1 style="font-size:1.6rem;margin-bottom:1rem;">' + title + '</h1>';
+      if (image) html += '<img src="' + image + '" style="width:100%;border-radius:8px;margin-bottom:1rem;" onerror="this.style.display=\'none\'">';
+      html += '<div style="line-height:1.8;">' + content.replace(/\n/g, '<br>') + '</div>';
+      document.getElementById('previewContent').innerHTML = html;
+      document.getElementById('previewModal').style.display = 'block';
+    }
+
+    // Auto-generate slug from title
+    document.getElementById('postTitle').addEventListener('input', function() {
+      if (!editingPath) {
+        document.getElementById('postSlug').value = generateSlug(this.value);
+      }
+    });
   </script>
 
 </body>
