@@ -45,10 +45,10 @@ collections:
         name: "image"
         widget: "image"
         required: false
-      - label: "Beschreibung (SEO)"
+      - label: "Beschreibung SEO"
         name: "description"
         widget: "text"
-      - label: "Lesezeit (Minuten)"
+      - label: "Lesezeit"
         name: "reading_time"
         widget: "number"
         default: 5
