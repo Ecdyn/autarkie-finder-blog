@@ -10,6 +10,12 @@
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://blog.autarkie-finder.com">
 
+  <!-- Security -->
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="X-Frame-Options" content="DENY">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+
+  <!-- Open Graph -->
   <meta property="og:title" content="Blog – Autarkie-Finder">
   <meta property="og:description" content="Tipps, Anleitungen und Wissen rund um autarkes Leben.">
   <meta property="og:type" content="website">
@@ -18,6 +24,7 @@
   <meta property="og:site_name" content="Autarkie-Finder">
   <meta name="twitter:card" content="summary_large_image">
 
+  <!-- Schema.org -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -110,15 +117,8 @@
     .read-more:hover{gap:.5rem;}
 
     .loading-posts,.no-posts{text-align:center;padding:3rem;color:var(--text-muted);grid-column:1/-1;}
-
-    /* Newsletter */
-    .newsletter{max-width:560px;margin:0 auto 3rem;padding:2rem;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r);text-align:center;transition:background .3s;}
-    .newsletter h3{font-size:1.2rem;font-weight:600;margin-bottom:.3rem;}
-    .newsletter p{color:var(--text-sec);font-size:.88rem;margin-bottom:1.2rem;}
-    .newsletter-form{display:flex;gap:.4rem;max-width:380px;margin:0 auto;}
-    .newsletter-form input{flex:1;padding:.6rem .9rem;border-radius:8px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-family:inherit;font-size:.88rem;outline:none;transition:border-color var(--t);}
-    .newsletter-form input:focus{border-color:var(--accent);}
-    .newsletter-form button{padding:.6rem 1.2rem;border-radius:8px;border:none;background:var(--accent);color:#000;font-family:inherit;font-weight:600;font-size:.88rem;cursor:pointer;white-space:nowrap;}
+    .rate-limit-info{text-align:center;padding:2rem;color:var(--text-muted);grid-column:1/-1;font-size:.88rem;}
+    .rate-limit-info a{color:var(--accent);}
 
     /* Footer */
     footer{border-top:1px solid var(--border);padding:1.5rem;text-align:center;}
@@ -162,8 +162,6 @@
       .categories{padding:.3rem 1rem 1rem;overflow-x:auto;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;gap:.35rem;}
       .cat-btn{font-size:.78rem;padding:.3rem .75rem;}
       .card-img{height:160px;}
-      .newsletter{margin:0 1rem 2.5rem;padding:1.5rem 1rem;}
-      .newsletter-form{flex-direction:column;}
       .post-detail{padding:1.5rem 1rem 3rem;}
     }
 
@@ -222,15 +220,6 @@
     <div class="blog-grid" id="blogGrid">
       <div class="loading-posts">Beiträge werden geladen...</div>
     </div>
-
-    <section class="newsletter">
-      <h3>Newsletter</h3>
-      <p>Die besten Tipps für autarkes Leben – direkt in dein Postfach.</p>
-      <div class="newsletter-form">
-        <input type="email" placeholder="deine@email.de" aria-label="E-Mail">
-        <button type="button">Abonnieren</button>
-      </div>
-    </section>
   </div>
 
   <div class="post-detail" id="postDetail">
@@ -250,6 +239,7 @@
 
   <script>
     var REPO='ecdyn/autarkie-finder-blog',BRANCH='main',allPosts=[],currentFilter='alle';
+    var CACHE_KEY='af_blog_cache',CACHE_TTL=5*60*1000; // 5 Minuten Cache
     var catLabels={energie:'Energie',wasser:'Wasser',ernaehrung:'Ernährung',wohnen:'Wohnen',offgrid:'Off-Grid',technik:'Technik'};
     var months=['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
 
@@ -269,7 +259,7 @@
       h=h.replace(/^## (.+)$/gm,'<h2>$1</h2>');
       h=h.replace(/^# (.+)$/gm,'<h1>$1</h1>');
       h=h.replace(/!\[([^\]]*)\]\(([^)]+)\)/g,'<img src="$2" alt="$1" loading="lazy">');
-      h=h.replace(/\[(.+?)\]\((.+?)\)/g,'<a href="$2">$1</a>');
+      h=h.replace(/\[(.+?)\]\((.+?)\)/g,'<a href="$2" rel="noopener">$1</a>');
       h=h.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');
       h=h.replace(/\*(.+?)\*/g,'<em>$1</em>');
       h=h.replace(/`(.+?)`/g,'<code>$1</code>');
@@ -289,17 +279,83 @@
       return h;
     }
 
+    // Sanitize HTML to prevent XSS
+    function sanitize(str){
+      var d=document.createElement('div');
+      d.textContent=str;
+      return d.innerHTML;
+    }
+
+    // Cache functions
+    function getCache(){
+      try{
+        var c=JSON.parse(sessionStorage.getItem(CACHE_KEY));
+        if(c && Date.now()-c.ts < CACHE_TTL) return c.data;
+      }catch(e){}
+      return null;
+    }
+
+    function setCache(data){
+      try{
+        sessionStorage.setItem(CACHE_KEY,JSON.stringify({ts:Date.now(),data:data}));
+      }catch(e){}
+    }
+
     async function loadPosts(){
+      var g=document.getElementById('blogGrid');
+
+      // Try cache first
+      var cached=getCache();
+      if(cached){
+        allPosts=cached;
+        renderPosts(cached);
+        // Refresh in background
+        fetchPosts(true);
+        return;
+      }
+
+      g.innerHTML='<div class="loading-posts">Beiträge werden geladen...</div>';
+      await fetchPosts(false);
+    }
+
+    async function fetchPosts(silent){
       var g=document.getElementById('blogGrid');
       try{
         var r=await fetch('https://api.github.com/repos/'+REPO+'/contents/_posts?ref='+BRANCH);
-        if(r.status===404){g.innerHTML='<div class="no-posts">Noch keine Beiträge.</div>';return;}
+
+        // Rate limit check
+        var remaining=r.headers.get('X-RateLimit-Remaining');
+        if(r.status===403 && remaining==='0'){
+          if(!silent){
+            var reset=new Date(r.headers.get('X-RateLimit-Reset')*1000);
+            g.innerHTML='<div class="rate-limit-info">API-Limit erreicht. Bitte versuche es in einigen Minuten erneut.<br>Nächste Verfügbarkeit: '+reset.toLocaleTimeString('de-DE')+'</div>';
+          }
+          return;
+        }
+
+        if(r.status===404){
+          if(!silent) g.innerHTML='<div class="no-posts">Noch keine Beiträge.</div>';
+          return;
+        }
+
         var files=await r.json();
-        if(!Array.isArray(files)||!files.length){g.innerHTML='<div class="no-posts">Noch keine Beiträge.</div>';return;}
+        if(!Array.isArray(files)||!files.length){
+          if(!silent) g.innerHTML='<div class="no-posts">Noch keine Beiträge.</div>';
+          return;
+        }
+
         var posts=[];
         for(var i=0;i<files.length;i++){
           var f=files[i];if(!f.name.endsWith('.md'))continue;
+
+          // Check rate limit before each request
+          if(remaining!==null && parseInt(remaining)<5){
+            break; // Stop fetching to preserve remaining API calls
+          }
+
           var cr=await fetch('https://api.github.com/repos/'+REPO+'/contents/'+f.path+'?ref='+BRANCH);
+          remaining=cr.headers.get('X-RateLimit-Remaining');
+          if(!cr.ok) continue;
           var cd=await cr.json();
           var dec=decodeURIComponent(escape(atob(cd.content.replace(/\n/g,''))));
           var p=parseFM(dec);
@@ -316,10 +372,16 @@
             body:p.b
           });
         }
+
         posts.sort(function(a,b){return b.date.localeCompare(a.date);});
         allPosts=posts;
+        setCache(posts);
         renderPosts(posts);
-      }catch(e){g.innerHTML='<div class="no-posts">Fehler beim Laden.</div>';console.error(e);}
+
+      }catch(e){
+        if(!silent) g.innerHTML='<div class="no-posts">Fehler beim Laden der Beiträge.</div>';
+        console.error(e);
+      }
     }
 
     function renderPosts(posts){
@@ -327,22 +389,22 @@
       if(!posts.length){g.innerHTML='<div class="no-posts">Keine Beiträge in dieser Kategorie.</div>';return;}
       g.innerHTML='';
       posts.forEach(function(post,i){
-        var cl=catLabels[post.category]||post.category;
+        var cl=catLabels[post.category]||sanitize(post.category);
         var c=document.createElement('article');
         c.className='post-card';
         c.setAttribute('data-category',post.category);
         c.style.animationDelay=(i*0.05)+'s';
         var imgHTML='';
         if(post.image){
-          imgHTML='<div class="card-img"><img src="'+post.image+'" alt="'+(post.image_alt||post.title)+'" loading="lazy"><span class="card-badge">'+cl+'</span></div>';
+          imgHTML='<div class="card-img"><img src="'+sanitize(post.image)+'" alt="'+sanitize(post.image_alt||post.title)+'" loading="lazy" onerror="this.parentElement.style.display=\'none\'"><span class="card-badge">'+cl+'</span></div>';
         }else{
           imgHTML='<div class="card-no-img"><span class="card-badge">'+cl+'</span></div>';
         }
         c.innerHTML=imgHTML+
           '<div class="card-body">'+
-            '<div class="card-meta"><span>'+fmtDate(post.date)+'</span><span>'+post.reading_time+' Min.</span></div>'+
-            '<h2>'+post.title+'</h2>'+
-            '<p class="excerpt">'+(post.description||post.body.substring(0,140)+'...')+'</p>'+
+            '<div class="card-meta"><span>'+fmtDate(post.date)+'</span><span>'+sanitize(post.reading_time)+' Min.</span></div>'+
+            '<h2>'+sanitize(post.title)+'</h2>'+
+            '<p class="excerpt">'+sanitize(post.description||post.body.substring(0,140))+'</p>'+
             '<span class="read-more">Weiterlesen &rarr;</span>'+
           '</div>';
         c.onclick=function(){showPost(post);};
@@ -358,29 +420,33 @@
     }
 
     function showPost(post){
-      var cl=catLabels[post.category]||post.category;
+      var cl=catLabels[post.category]||sanitize(post.category);
       document.getElementById('blogView').style.display='none';
       document.getElementById('postDetail').style.display='block';
-      var imgHTML=post.image?'<img class="detail-img" src="'+post.image+'" alt="'+(post.image_alt||post.title)+'" loading="lazy">':'';
+      var imgHTML=post.image?'<img class="detail-img" src="'+sanitize(post.image)+'" alt="'+sanitize(post.image_alt||post.title)+'" loading="lazy" onerror="this.style.display=\'none\'">':'';
       document.getElementById('postDetailContent').innerHTML=
         imgHTML+
-        '<h1>'+post.title+'</h1>'+
+        '<h1>'+sanitize(post.title)+'</h1>'+
         '<div class="detail-meta">'+
           '<span class="detail-badge">'+cl+'</span>'+
           '<span>'+fmtDate(post.date)+'</span>'+
-          '<span>'+post.reading_time+' Min. Lesezeit</span>'+
+          '<span>'+sanitize(post.reading_time)+' Min. Lesezeit</span>'+
           '<span>Von Autarkie-Finder</span>'+
         '</div>'+
         '<div class="content">'+md2html(post.body)+'</div>';
       window.scrollTo(0,0);
-      // Update page title for SEO
       document.title=post.title+' – Autarkie-Finder Blog';
+
+      // Update meta description for SEO (client-side)
+      var metaDesc=document.querySelector('meta[name="description"]');
+      if(metaDesc && post.description) metaDesc.setAttribute('content',post.description);
     }
 
     function showBlogList(){
       document.getElementById('postDetail').style.display='none';
       document.getElementById('blogView').style.display='block';
       document.title='Blog – Autarkie-Finder | Tipps für autarkes Leben';
+      document.querySelector('meta[name="description"]').setAttribute('content','Autarkie-Finder Blog: Tipps, Anleitungen und Wissen rund um autarkes Leben.');
       window.scrollTo(0,0);
     }
 
