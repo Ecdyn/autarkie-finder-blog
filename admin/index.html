@@ -407,7 +407,8 @@
           body: JSON.stringify({ message: 'Beitrag gelöscht', sha: sha, branch: BRANCH })
         });
         if (res.ok) {
-          showStatus('Beitrag gelöscht!', 'success');
+          showStatus('Beitrag gelöscht! Sitemap wird aktualisiert...', 'success');
+          await updateSitemap();
           loadPosts();
         } else {
           var err = await res.json();
@@ -460,7 +461,8 @@
       try {
         var res = await ghAPI('/contents/' + path, { method: 'PUT', body: JSON.stringify(body) });
         if (res.ok) {
-          showStatus('Beitrag erfolgreich veröffentlicht!', 'success');
+          showStatus('Beitrag veröffentlicht! Sitemap wird aktualisiert...', 'success');
+          await updateSitemap();
           showList();
         } else {
           var err = await res.json();
@@ -468,6 +470,53 @@
         }
       } catch (e) {
         showStatus('Fehler: ' + e.message, 'error');
+      }
+    }
+
+    async function updateSitemap() {
+      try {
+        // Get all posts
+        var res = await ghAPI('/contents/_posts?ref=' + BRANCH);
+        var files = await res.json();
+        if (!Array.isArray(files)) return;
+
+        var today = new Date().toISOString().substring(0, 10);
+
+        var xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
+        xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
+        xml += '  <url>\n';
+        xml += '    <loc>https://blog.autarkie-finder.com/</loc>\n';
+        xml += '    <lastmod>' + today + '</lastmod>\n';
+        xml += '    <changefreq>weekly</changefreq>\n';
+        xml += '    <priority>1.0</priority>\n';
+        xml += '  </url>\n';
+
+        for (var i = 0; i < files.length; i++) {
+          var f = files[i];
+          if (!f.name.endsWith('.md')) continue;
+          var slug = f.name.replace(/^\d{4}-\d{2}-\d{2}-/, '').replace('.md', '');
+          var date = f.name.substring(0, 10);
+          xml += '  <url>\n';
+          xml += '    <loc>https://blog.autarkie-finder.com/#/post/' + slug + '</loc>\n';
+          xml += '    <lastmod>' + date + '</lastmod>\n';
+          xml += '    <changefreq>monthly</changefreq>\n';
+          xml += '    <priority>0.8</priority>\n';
+          xml += '  </url>\n';
+        }
+
+        xml += '</urlset>';
+
+        // Get current sitemap sha
+        var sitemapRes = await ghAPI('/contents/sitemap.xml?ref=' + BRANCH);
+        var sitemapBody = { message: 'Sitemap aktualisiert', content: btoa(unescape(encodeURIComponent(xml))), branch: BRANCH };
+        if (sitemapRes.ok) {
+          var sitemapData = await sitemapRes.json();
+          sitemapBody.sha = sitemapData.sha;
+        }
+
+        await ghAPI('/contents/sitemap.xml', { method: 'PUT', body: JSON.stringify(sitemapBody) });
+      } catch (e) {
+        console.error('Sitemap update failed:', e);
       }
     }
 
