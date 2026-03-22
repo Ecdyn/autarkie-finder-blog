@@ -8,16 +8,12 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #0a0a0a; color: #e5e5e5; min-height: 100vh; }
-
-    /* Login */
     .login { display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 1.5rem; }
     .login-box { text-align: center; width: 100%; max-width: 400px; }
     .login-box h1 { font-size: 1.4rem; margin-bottom: 0.3rem; }
     .login-box .subtitle { color: #888; margin-bottom: 1.5rem; font-size: 0.88rem; }
     .login-box input { width: 100%; padding: 0.75rem 1rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: #1a1a1a; color: #e5e5e5; font-size: 0.92rem; margin-bottom: 0.8rem; outline: none; font-family: inherit; }
     .login-box input:focus { border-color: #22c55e; }
-
-    /* Buttons */
     .btn { padding: 0.7rem 1.5rem; border-radius: 8px; border: none; background: #22c55e; color: #000; font-weight: 600; font-size: 0.9rem; cursor: pointer; font-family: inherit; transition: opacity 0.2s; }
     .btn:hover { opacity: 0.9; }
     .btn-full { width: 100%; }
@@ -26,32 +22,21 @@
     .btn-secondary:hover { background: #333; }
     .btn-danger { background: #dc2626; color: #fff; }
     .btn-danger:hover { background: #b91c1c; }
-
-    /* CMS Layout */
+    .btn-warning { background: #d97706; color: #fff; }
     .cms { display: none; }
-    .cms-header {
-      background: #111; border-bottom: 1px solid rgba(255,255,255,0.08);
-      padding: 0.8rem 1.5rem; display: flex; justify-content: space-between; align-items: center;
-      position: sticky; top: 0; z-index: 10;
-    }
+    .cms-header { background: #111; border-bottom: 1px solid rgba(255,255,255,0.08); padding: 0.8rem 1.5rem; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 10; flex-wrap: wrap; gap: 0.5rem; }
     .cms-header h2 { font-size: 1rem; display: flex; align-items: center; gap: 0.5rem; }
     .cms-header .logo-dot { width: 8px; height: 8px; background: #22c55e; border-radius: 50%; display: inline-block; }
+    .cms-header-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
     .cms-body { max-width: 800px; margin: 0 auto; padding: 1.5rem; }
-
-    /* Status */
     .status { padding: 0.7rem 1rem; border-radius: 8px; margin-bottom: 1rem; font-size: 0.88rem; display: none; }
     .status.success { display: block; background: rgba(34,197,94,0.12); color: #22c55e; border: 1px solid rgba(34,197,94,0.25); }
     .status.error { display: block; background: rgba(239,68,68,0.12); color: #ef4444; border: 1px solid rgba(239,68,68,0.25); }
-
-    /* Post List */
+    .status.info { display: block; background: rgba(59,130,246,0.12); color: #3b82f6; border: 1px solid rgba(59,130,246,0.25); }
     .posts-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem; gap: 1rem; flex-wrap: wrap; }
     .posts-header h3 { font-size: 1.1rem; }
     .post-list { display: flex; flex-direction: column; gap: 0.6rem; }
-    .post-item {
-      background: #111; border: 1px solid rgba(255,255,255,0.08); border-radius: 10px;
-      padding: 1rem 1.2rem; cursor: pointer; transition: border-color 0.2s;
-      display: flex; justify-content: space-between; align-items: center; gap: 1rem;
-    }
+    .post-item { background: #111; border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 1rem 1.2rem; cursor: pointer; transition: border-color 0.2s; display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
     .post-item:hover { border-color: rgba(255,255,255,0.2); }
     .post-item-info h4 { font-size: 0.95rem; margin-bottom: 0.2rem; }
     .post-item-info .meta { font-size: 0.78rem; color: #666; display: flex; gap: 0.8rem; flex-wrap: wrap; }
@@ -61,34 +46,24 @@
     .post-item-info .status-tag.draft { background: rgba(156,163,175,0.15); color: #9ca3af; }
     .post-item-info .status-tag.live { background: rgba(34,197,94,0.15); color: #22c55e; }
     .post-item-actions { display: flex; gap: 0.4rem; flex-shrink: 0; }
-
-    /* Editor */
     .editor { display: none; }
     .editor-section { margin-bottom: 1.5rem; }
     .editor-section-title { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: #22c55e; margin-bottom: 0.8rem; padding-bottom: 0.4rem; border-bottom: 1px solid rgba(255,255,255,0.06); }
     .field { margin-bottom: 1rem; }
     .field label { display: block; font-size: 0.82rem; color: #aaa; margin-bottom: 0.3rem; }
     .field label .hint { font-weight: 400; color: #555; font-size: 0.78rem; }
-    .field input, .field select, .field textarea {
-      width: 100%; padding: 0.65rem 0.9rem; border-radius: 8px;
-      border: 1px solid rgba(255,255,255,0.1); background: #1a1a1a;
-      color: #e5e5e5; font-family: inherit; font-size: 0.9rem; outline: none;
-      transition: border-color 0.2s;
-    }
+    .field input, .field select, .field textarea { width: 100%; padding: 0.65rem 0.9rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: #1a1a1a; color: #e5e5e5; font-family: inherit; font-size: 0.9rem; outline: none; transition: border-color 0.2s; }
     .field input:focus, .field select:focus, .field textarea:focus { border-color: #22c55e; }
     .field select { appearance: auto; }
     .field textarea { min-height: 350px; resize: vertical; line-height: 1.7; }
     .field .char-count { font-size: 0.75rem; color: #555; margin-top: 0.2rem; text-align: right; }
     .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
     .image-preview { margin-top: 0.5rem; max-width: 100%; max-height: 200px; border-radius: 8px; display: none; }
-
     .editor-actions { display: flex; gap: 0.8rem; margin-top: 1.5rem; flex-wrap: wrap; }
     .editor-actions .btn { min-width: 140px; text-align: center; }
-
     .loading { color: #888; text-align: center; padding: 2rem; }
     .empty { color: #555; text-align: center; padding: 3rem 1rem; font-size: 0.95rem; }
-
-    /* Responsive */
+    .progress { margin-top: 0.5rem; font-size: 0.82rem; color: #888; }
     @media (max-width: 600px) {
       .cms-header { padding: 0.7rem 1rem; }
       .cms-body { padding: 1rem; }
@@ -103,7 +78,6 @@
 </head>
 <body>
 
-  <!-- Login -->
   <div class="login" id="loginView">
     <div class="login-box">
       <h1>Autarkie-Finder CMS</h1>
@@ -113,121 +87,62 @@
     </div>
   </div>
 
-  <!-- CMS -->
   <div class="cms" id="cmsView">
     <div class="cms-header">
       <h2><span class="logo-dot"></span> Autarkie-Finder CMS</h2>
-      <button class="btn btn-sm btn-secondary" onclick="logout()">Abmelden</button>
+      <div class="cms-header-actions">
+        <button class="btn btn-sm btn-warning" onclick="regenerateAll()">Alle regenerieren</button>
+        <button class="btn btn-sm btn-secondary" onclick="logout()">Abmelden</button>
+      </div>
     </div>
     <div class="cms-body">
       <div id="statusMsg" class="status"></div>
+      <div id="progressMsg" class="progress" style="display:none;"></div>
 
-      <!-- Post List -->
       <div id="postList">
         <div class="posts-header">
           <h3>Blog-Beiträge</h3>
           <button class="btn btn-sm" onclick="newPost()">+ Neuer Beitrag</button>
         </div>
-        <div id="posts" class="post-list">
-          <div class="loading">Beiträge werden geladen...</div>
-        </div>
+        <div id="posts" class="post-list"><div class="loading">Beiträge werden geladen...</div></div>
       </div>
 
-      <!-- Editor -->
       <div id="editor" class="editor">
         <div class="posts-header">
           <h3 id="editorTitle">Neuer Beitrag</h3>
           <button class="btn btn-sm btn-secondary" onclick="showList()">Zurück</button>
         </div>
-
-        <!-- Beitrag -->
         <div class="editor-section">
           <div class="editor-section-title">Beitrag</div>
-          <div class="field">
-            <label>Titel</label>
-            <input type="text" id="postTitle" placeholder="Titel des Beitrags">
-          </div>
+          <div class="field"><label>Titel</label><input type="text" id="postTitle" placeholder="Titel des Beitrags"></div>
           <div class="field-row">
-            <div class="field">
-              <label>Kategorie</label>
-              <select id="postCategory">
-                <option value="energie">Energie</option>
-                <option value="wasser">Wasser</option>
-                <option value="ernaehrung">Ernährung</option>
-                <option value="wohnen">Wohnen</option>
-                <option value="offgrid">Off-Grid</option>
-                <option value="technik">Technik</option>
-              </select>
-            </div>
-            <div class="field">
-              <label>Lesezeit (Minuten)</label>
-              <input type="number" id="postTime" value="5" min="1" max="60">
-            </div>
+            <div class="field"><label>Kategorie</label><select id="postCategory"><option value="energie">Energie</option><option value="wasser">Wasser</option><option value="ernaehrung">Ernährung</option><option value="wohnen">Wohnen</option><option value="offgrid">Off-Grid</option><option value="technik">Technik</option></select></div>
+            <div class="field"><label>Lesezeit (Minuten)</label><input type="number" id="postTime" value="5" min="1" max="60"></div>
           </div>
-          <div class="field">
-            <label>Inhalt <span class="hint">(Markdown-Format)</span></label>
-            <textarea id="postContent" placeholder="# Überschrift&#10;&#10;Dein Text hier...&#10;&#10;## Unterüberschrift&#10;&#10;- Aufzählung 1&#10;- Aufzählung 2&#10;&#10;**Fett** und *kursiv*"></textarea>
-          </div>
+          <div class="field"><label>Inhalt <span class="hint">(Markdown-Format)</span></label><textarea id="postContent" placeholder="# Überschrift&#10;&#10;Dein Text...&#10;&#10;## Unterüberschrift"></textarea></div>
         </div>
-
-        <!-- Planung -->
         <div class="editor-section">
           <div class="editor-section-title">Veröffentlichung</div>
-          <div class="field">
-            <label>Status</label>
-            <select id="postStatus" onchange="toggleSchedule()">
-              <option value="publish">Sofort veröffentlichen</option>
-              <option value="scheduled">Geplant (Datum & Uhrzeit)</option>
-              <option value="draft">Entwurf (nicht sichtbar)</option>
-            </select>
-          </div>
+          <div class="field"><label>Status</label><select id="postStatus" onchange="toggleSchedule()"><option value="publish">Sofort veröffentlichen</option><option value="scheduled">Geplant (Datum & Uhrzeit)</option><option value="draft">Entwurf (nicht sichtbar)</option></select></div>
           <div id="scheduleFields" style="display:none;">
             <div class="field-row">
-              <div class="field">
-                <label>Veröffentlichungsdatum</label>
-                <input type="date" id="postDate">
-              </div>
-              <div class="field">
-                <label>Uhrzeit</label>
-                <input type="time" id="postTimeSchedule" value="08:00">
-              </div>
+              <div class="field"><label>Veröffentlichungsdatum</label><input type="date" id="postDate"></div>
+              <div class="field"><label>Uhrzeit</label><input type="time" id="postTimeSchedule" value="08:00"></div>
             </div>
             <div id="scheduleInfo" style="font-size:0.8rem;color:#888;margin-top:-0.5rem;margin-bottom:1rem;"></div>
           </div>
         </div>
-
-        <!-- Bild -->
         <div class="editor-section">
           <div class="editor-section-title">Beitragsbild</div>
-          <div class="field">
-            <label>Bild-URL <span class="hint">(Unsplash, eigenes Hosting, oder leer lassen)</span></label>
-            <input type="url" id="postImage" placeholder="https://images.unsplash.com/photo-..." oninput="previewImage()">
-            <img id="imagePreview" class="image-preview" alt="Vorschau">
-          </div>
-          <div class="field">
-            <label>Bild-Beschreibung (Alt-Text) <span class="hint">(wichtig für SEO & Barrierefreiheit)</span></label>
-            <input type="text" id="postImageAlt" placeholder="z.B. Solarpanels auf einem Einfamilienhaus">
-          </div>
+          <div class="field"><label>Bild-URL <span class="hint">(Unsplash, eigenes Hosting, oder leer lassen)</span></label><input type="url" id="postImage" placeholder="https://images.unsplash.com/photo-..." oninput="previewImage()"><img id="imagePreview" class="image-preview" alt="Vorschau"></div>
+          <div class="field"><label>Bild-Beschreibung (Alt-Text) <span class="hint">(wichtig für SEO)</span></label><input type="text" id="postImageAlt" placeholder="z.B. Solarpanels auf einem Einfamilienhaus"></div>
         </div>
-
-        <!-- SEO -->
         <div class="editor-section">
           <div class="editor-section-title">SEO & Meta-Daten</div>
-          <div class="field">
-            <label>Meta-Beschreibung <span class="hint">(wird bei Google angezeigt, 120-160 Zeichen ideal)</span></label>
-            <input type="text" id="postDesc" placeholder="Kurze Beschreibung für Google..." oninput="updateCharCount('postDesc', 'descCount', 160)">
-            <div class="char-count" id="descCount">0 / 160</div>
-          </div>
-          <div class="field">
-            <label>SEO-Keywords <span class="hint">(kommagetrennt)</span></label>
-            <input type="text" id="postKeywords" placeholder="z.B. Solaranlage, Speicher, Autarkie, 2026">
-          </div>
-          <div class="field">
-            <label>URL-Slug <span class="hint">(wird automatisch generiert, optional anpassen)</span></label>
-            <input type="text" id="postSlug" placeholder="wird-automatisch-generiert">
-          </div>
+          <div class="field"><label>Meta-Beschreibung <span class="hint">(120-160 Zeichen ideal)</span></label><input type="text" id="postDesc" placeholder="Kurze Beschreibung für Google..." oninput="updateCharCount('postDesc','descCount',160)"><div class="char-count" id="descCount">0 / 160</div></div>
+          <div class="field"><label>SEO-Keywords <span class="hint">(kommagetrennt)</span></label><input type="text" id="postKeywords" placeholder="z.B. Solaranlage, Speicher, Autarkie"></div>
+          <div class="field"><label>URL-Slug <span class="hint">(wird automatisch generiert)</span></label><input type="text" id="postSlug" placeholder="wird-automatisch-generiert"></div>
         </div>
-
         <div class="editor-actions">
           <button class="btn" id="saveBtn" onclick="savePost()">Veröffentlichen</button>
           <button class="btn btn-secondary" onclick="previewPost()">Vorschau</button>
@@ -237,439 +152,469 @@
     </div>
   </div>
 
-  <!-- Preview Modal -->
-  <div id="previewModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:100; overflow-y:auto; padding:2rem;">
-    <div style="max-width:700px; margin:0 auto; background:#111; border-radius:12px; padding:2rem; position:relative;">
+  <div id="previewModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:100;overflow-y:auto;padding:2rem;">
+    <div style="max-width:700px;margin:0 auto;background:#111;border-radius:12px;padding:2rem;position:relative;">
       <button onclick="document.getElementById('previewModal').style.display='none'" style="position:absolute;top:1rem;right:1rem;background:none;border:none;color:#888;font-size:1.5rem;cursor:pointer;">&times;</button>
-      <div id="previewContent" style="color:#ccc; line-height:1.7;"></div>
+      <div id="previewContent" style="color:#ccc;line-height:1.7;"></div>
     </div>
   </div>
 
   <script>
-    var TOKEN = '';
-    var REPO = 'ecdyn/autarkie-finder-blog';
-    var BRANCH = 'main';
-    var editingPath = null;
-    var editingSha = null;
+    var TOKEN='',REPO='ecdyn/autarkie-finder-blog',BRANCH='main',editingPath=null,editingSha=null;
+    var categoryLabels={energie:'Energie',wasser:'Wasser',ernaehrung:'Ernährung',wohnen:'Wohnen',offgrid:'Off-Grid',technik:'Technik'};
+    var SITE='https://blog.autarkie-finder.com';
 
-    var categoryLabels = { energie:'Energie', wasser:'Wasser', ernaehrung:'Ernährung', wohnen:'Wohnen', offgrid:'Off-Grid', technik:'Technik' };
+    if(localStorage.getItem('gh_token')){TOKEN=localStorage.getItem('gh_token');showCMS();}
 
-    if (localStorage.getItem('gh_token')) {
-      TOKEN = localStorage.getItem('gh_token');
-      showCMS();
+    function login(){var t=document.getElementById('tokenInput').value.trim();if(!t)return;TOKEN=t;localStorage.setItem('gh_token',t);showCMS();}
+    function logout(){TOKEN='';localStorage.removeItem('gh_token');document.getElementById('cmsView').style.display='none';document.getElementById('loginView').style.display='flex';}
+    function showCMS(){document.getElementById('loginView').style.display='none';document.getElementById('cmsView').style.display='block';loadPosts();}
+    function showList(){document.getElementById('editor').style.display='none';document.getElementById('postList').style.display='block';editingPath=null;editingSha=null;loadPosts();}
+
+    function showStatus(msg,type){var el=document.getElementById('statusMsg');el.textContent=msg;el.className='status '+type;if(type!=='info')setTimeout(function(){el.className='status';},5000);}
+    function showProgress(msg){var el=document.getElementById('progressMsg');el.textContent=msg;el.style.display=msg?'block':'none';}
+    function updateCharCount(id,cid,max){var l=document.getElementById(id).value.length;var e=document.getElementById(cid);e.textContent=l+' / '+max;e.style.color=l>max?'#ef4444':l>max*0.75?'#eab308':'#555';}
+    function previewImage(){var u=document.getElementById('postImage').value.trim();var i=document.getElementById('imagePreview');if(u){i.src=u;i.style.display='block';i.onerror=function(){i.style.display='none';};}else{i.style.display='none';}}
+    function generateSlug(t){return t.toLowerCase().replace(/[äÄ]/g,'ae').replace(/[öÖ]/g,'oe').replace(/[üÜ]/g,'ue').replace(/[ß]/g,'ss').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');}
+
+    function toggleSchedule(){
+      var s=document.getElementById('postStatus').value,f=document.getElementById('scheduleFields'),b=document.getElementById('saveBtn');
+      if(s==='scheduled'){f.style.display='block';b.textContent='Planen';if(!document.getElementById('postDate').value){var d=new Date();d.setDate(d.getDate()+1);document.getElementById('postDate').value=d.toISOString().substring(0,10);}updateScheduleInfo();}
+      else if(s==='draft'){f.style.display='none';b.textContent='Als Entwurf speichern';}
+      else{f.style.display='none';b.textContent='Veröffentlichen';}
     }
+    function updateScheduleInfo(){var d=document.getElementById('postDate').value,t=document.getElementById('postTimeSchedule').value,i=document.getElementById('scheduleInfo');if(d&&t){var x=new Date(d+'T'+t),n=new Date(),df=x-n;if(df<=0){i.innerHTML='⚠️ Liegt in der Vergangenheit – wird sofort veröffentlicht.';i.style.color='#eab308';}else{var h=Math.floor(df/3600000),dy=Math.floor(h/24),r=h%24;i.innerHTML='📅 Wird veröffentlicht in '+(dy>0?dy+' Tag'+(dy>1?'e':'')+' und '+r+' Std.':h+' Stunden');i.style.color='#22c55e';}}}
 
-    function login() {
-      var t = document.getElementById('tokenInput').value.trim();
-      if (!t) return;
-      TOKEN = t;
-      localStorage.setItem('gh_token', t);
-      showCMS();
-    }
-
-    function logout() {
-      TOKEN = '';
-      localStorage.removeItem('gh_token');
-      document.getElementById('cmsView').style.display = 'none';
-      document.getElementById('loginView').style.display = 'flex';
-    }
-
-    function showCMS() {
-      document.getElementById('loginView').style.display = 'none';
-      document.getElementById('cmsView').style.display = 'block';
-      loadPosts();
-    }
-
-    function showList() {
-      document.getElementById('editor').style.display = 'none';
-      document.getElementById('postList').style.display = 'block';
-      editingPath = null;
-      editingSha = null;
-      loadPosts();
-    }
-
-    function showStatus(msg, type) {
-      var el = document.getElementById('statusMsg');
-      el.textContent = msg;
-      el.className = 'status ' + type;
-      setTimeout(function() { el.className = 'status'; }, 4000);
-    }
-
-    function updateCharCount(inputId, countId, max) {
-      var len = document.getElementById(inputId).value.length;
-      var el = document.getElementById(countId);
-      el.textContent = len + ' / ' + max;
-      el.style.color = len > max ? '#ef4444' : len > max * 0.75 ? '#eab308' : '#555';
-    }
-
-    function previewImage() {
-      var url = document.getElementById('postImage').value.trim();
-      var img = document.getElementById('imagePreview');
-      if (url) { img.src = url; img.style.display = 'block'; img.onerror = function() { img.style.display = 'none'; }; }
-      else { img.style.display = 'none'; }
-    }
-
-    function generateSlug(title) {
-      return title.toLowerCase()
-        .replace(/[äÄ]/g,'ae').replace(/[öÖ]/g,'oe').replace(/[üÜ]/g,'ue').replace(/[ß]/g,'ss')
-        .replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
-    }
-
-    async function ghAPI(path, options) {
-      var url = 'https://api.github.com/repos/' + REPO + path;
-      var headers = { 'Authorization': 'token ' + TOKEN, 'Accept': 'application/vnd.github.v3+json' };
-      if (options && options.body) headers['Content-Type'] = 'application/json';
-      var res = await fetch(url, Object.assign({ headers: headers }, options || {}));
-      if (res.status === 401) { logout(); throw new Error('Token ungültig'); }
+    async function ghAPI(path,options){
+      var url='https://api.github.com/repos/'+REPO+path;
+      var headers={'Authorization':'token '+TOKEN,'Accept':'application/vnd.github.v3+json'};
+      if(options&&options.body)headers['Content-Type']='application/json';
+      var res=await fetch(url,Object.assign({headers:headers},options||{}));
+      if(res.status===401){logout();throw new Error('Token ungültig');}
       return res;
     }
 
-    async function loadPosts() {
-      var container = document.getElementById('posts');
-      container.innerHTML = '<div class="loading">Beiträge werden geladen...</div>';
-      try {
-        var res = await ghAPI('/contents/_posts?ref=' + BRANCH);
-        if (res.status === 404) {
-          container.innerHTML = '<div class="empty">Noch keine Beiträge. Erstelle deinen ersten!</div>';
-          return;
-        }
-        var files = await res.json();
-        if (!files.length) {
-          container.innerHTML = '<div class="empty">Noch keine Beiträge.</div>';
-          return;
-        }
-        files.sort(function(a, b) { return b.name.localeCompare(a.name); });
-        container.innerHTML = '';
-        for (var i = 0; i < files.length; i++) {
-          var f = files[i];
-          // Quick parse to get category
-          var contentRes = await ghAPI('/contents/' + f.path + '?ref=' + BRANCH);
-          var contentData = await contentRes.json();
-          var decoded = decodeURIComponent(escape(atob(contentData.content.replace(/\n/g, ''))));
-          var catMatch = decoded.match(/category:\s*(\w+)/);
-          var cat = catMatch ? catMatch[1] : '';
-          var catLabel = categoryLabels[cat] || cat;
-          var statusMatch = decoded.match(/status:\s*(\w+)/);
-          var postStatus = statusMatch ? statusMatch[1] : 'publish';
-          var publishDateMatch = decoded.match(/publish_date:\s*"?([^"\n]*)"?/);
-          var publishTimeMatch = decoded.match(/publish_time:\s*"?([^"\n]*)"?/);
+    // ─── Markdown to HTML converter ───
+    function md2html(s){
+      var h=s;
+      h=h.replace(/^### (.+)$/gm,'<h3>$1</h3>');
+      h=h.replace(/^## (.+)$/gm,'<h2>$1</h2>');
+      h=h.replace(/^# (.+)$/gm,'<h1>$1</h1>');
+      h=h.replace(/!\[([^\]]*)\]\(([^)]+)\)/g,'<img src="$2" alt="$1" loading="lazy">');
+      h=h.replace(/\[(.+?)\]\((.+?)\)/g,'<a href="$2" rel="noopener">$1</a>');
+      h=h.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');
+      h=h.replace(/\*(.+?)\*/g,'<em>$1</em>');
+      h=h.replace(/`(.+?)`/g,'<code>$1</code>');
+      h=h.replace(/^> (.+)$/gm,'<blockquote><p>$1</p></blockquote>');
+      h=h.replace(/^- (.+)$/gm,'<li>$1</li>');
+      h=h.replace(/(<li>.*<\/li>\n?)+/g,'<ul>$&</ul>');
+      h=h.replace(/^\d+\. (.+)$/gm,'<li>$1</li>');
+      h=h.replace(/^\|(.+)\|$/gm,function(m,c){var cells=c.split('|').map(function(x){return x.trim();});if(cells.every(function(x){return/^[-:]+$/.test(x);}))return'';return'<tr>'+cells.map(function(x){return'<td>'+x+'</td>';}).join('')+'</tr>';});
+      h=h.replace(/(<tr>.*<\/tr>\n?)+/g,'<table>$&</table>');
+      h=h.replace(/^---$/gm,'<hr>');
+      h=h.replace(/^(?!<[hultbaoip])((?!<).+)$/gm,'<p>$1</p>');
+      h=h.replace(/<p><\/p>/g,'');
+      return h;
+    }
 
-          // Check if scheduled post should be live
-          var statusTag = '';
-          if (postStatus === 'scheduled') {
-            var pd = publishDateMatch ? publishDateMatch[1] : '';
-            var pt = publishTimeMatch ? publishTimeMatch[1] : '08:00';
-            if (pd && new Date(pd + 'T' + pt) <= new Date()) {
-              statusTag = '<span class="status-tag live">Live</span>';
-            } else {
-              statusTag = '<span class="status-tag scheduled">Geplant' + (pd ? ' · ' + pd + ' ' + pt : '') + '</span>';
-            }
-          } else if (postStatus === 'draft') {
-            statusTag = '<span class="status-tag draft">Entwurf</span>';
-          } else {
-            statusTag = '<span class="status-tag live">Live</span>';
+    // ─── Generate static HTML page for a post ───
+    function generateArticleHTML(meta, bodyHTML, slug){
+      var catLabel=categoryLabels[meta.category]||meta.category;
+      var months=['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+      var d=new Date(meta.date);
+      var dateStr=d.getDate()+'. '+months[d.getMonth()]+' '+d.getFullYear();
+      var imgTag=meta.image?'<img class="hero-img" src="'+meta.image+'" alt="'+(meta.image_alt||meta.title)+'" loading="lazy">':'';
+      var url=SITE+'/'+slug+'/';
+
+      return '<!DOCTYPE html>\n'+
+'<html lang="de">\n<head>\n'+
+'  <meta charset="UTF-8">\n'+
+'  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n'+
+'  <title>'+meta.title+' – Autarkie-Finder Blog</title>\n'+
+'  <meta name="description" content="'+meta.description+'">\n'+
+'  <meta name="keywords" content="'+(meta.keywords||'')+'">\n'+
+'  <meta name="author" content="Autarkie-Finder">\n'+
+'  <meta name="robots" content="index, follow">\n'+
+'  <link rel="canonical" href="'+url+'">\n'+
+'  <meta http-equiv="X-Content-Type-Options" content="nosniff">\n'+
+'  <meta http-equiv="X-Frame-Options" content="DENY">\n'+
+'  <meta name="referrer" content="strict-origin-when-cross-origin">\n'+
+'  <meta property="og:title" content="'+meta.title+'">\n'+
+'  <meta property="og:description" content="'+meta.description+'">\n'+
+'  <meta property="og:type" content="article">\n'+
+'  <meta property="og:url" content="'+url+'">\n'+
+(meta.image?'  <meta property="og:image" content="'+meta.image+'">\n':'')+
+'  <meta property="og:locale" content="de_DE">\n'+
+'  <meta property="og:site_name" content="Autarkie-Finder">\n'+
+'  <meta name="twitter:card" content="summary_large_image">\n'+
+'  <meta name="twitter:title" content="'+meta.title+'">\n'+
+'  <meta name="twitter:description" content="'+meta.description+'">\n'+
+'  <script type="application/ld+json">\n'+
+'  {\n'+
+'    "@context": "https://schema.org",\n'+
+'    "@type": "Article",\n'+
+'    "headline": "'+meta.title.replace(/"/g,'\\"')+'",\n'+
+'    "description": "'+meta.description.replace(/"/g,'\\"')+'",\n'+
+'    "datePublished": "'+meta.date+'",\n'+
+'    "author": {"@type":"Person","name":"Autarkie-Finder"},\n'+
+'    "publisher": {"@type":"Organization","name":"Autarkie-Finder","url":"https://autarkie-finder.com"},\n'+
+'    "mainEntityOfPage": "'+url+'"\n'+
+(meta.image?'    ,"image": "'+meta.image+'"\n':'')+
+'  }\n'+
+'  <\/script>\n'+
+'  <script>(function(){var s=localStorage.getItem("theme");if(!s)s=window.matchMedia("(prefers-color-scheme:light)").matches?"light":"dark";document.documentElement.setAttribute("data-theme",s);})();<\/script>\n'+
+'  <style>\n'+
+'    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}\n'+
+'    [data-theme="dark"]{--bg:#0a0a0a;--bg-card:#111;--bg-nav:rgba(10,10,10,0.92);--text:#e5e5e5;--text-sec:#a0a0a0;--text-muted:#666;--accent:#22c55e;--border:rgba(255,255,255,0.08);--toggle-bg:#1a1a1a;--toggle-border:rgba(255,255,255,0.12);}\n'+
+'    [data-theme="light"]{--bg:#f5f5f5;--bg-card:#fff;--bg-nav:rgba(245,245,245,0.92);--text:#1a1a1a;--text-sec:#555;--text-muted:#888;--accent:#16a34a;--border:rgba(0,0,0,0.08);--toggle-bg:#e8e8e8;--toggle-border:rgba(0,0,0,0.1);}\n'+
+'    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;transition:background .3s,color .3s;}\n'+
+'    a{color:inherit;text-decoration:none;}\n'+
+'    nav{position:sticky;top:0;z-index:100;background:var(--bg-nav);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}\n'+
+'    .nav-inner{max-width:1100px;margin:0 auto;padding:0 1.5rem;height:56px;display:flex;align-items:center;justify-content:space-between;}\n'+
+'    .logo{display:flex;align-items:center;gap:.5rem;font-weight:700;font-size:1rem;color:var(--text);}\n'+
+'    .logo-dot{width:8px;height:8px;background:var(--accent);border-radius:50%;}\n'+
+'    .nav-links{display:flex;gap:1.8rem;list-style:none;}\n'+
+'    .nav-links a{font-size:.88rem;color:var(--text-sec);transition:color .25s;}\n'+
+'    .nav-links a:hover{color:var(--accent);}\n'+
+'    .theme-toggle{background:var(--toggle-bg);border:1px solid var(--toggle-border);border-radius:50px;width:40px;height:24px;cursor:pointer;position:relative;}\n'+
+'    .toggle-dot{position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:var(--accent);transition:transform .3s;}\n'+
+'    [data-theme="light"] .toggle-dot{transform:translateX(16px);}\n'+
+'    .article{max-width:760px;margin:0 auto;padding:2rem 1.5rem 4rem;}\n'+
+'    .back-link{display:inline-flex;align-items:center;gap:.3rem;color:var(--accent);font-weight:600;font-size:.88rem;margin-bottom:1.5rem;}\n'+
+'    .back-link:hover{gap:.5rem;}\n'+
+'    .hero-img{width:100%;max-height:400px;object-fit:cover;border-radius:16px;margin-bottom:1.5rem;}\n'+
+'    .article h1{font-size:clamp(1.5rem,3.5vw,2.2rem);font-weight:700;line-height:1.25;margin-bottom:.6rem;}\n'+
+'    .detail-meta{display:flex;gap:.8rem;color:var(--text-muted);font-size:.82rem;margin-bottom:2rem;flex-wrap:wrap;align-items:center;}\n'+
+'    .badge{display:inline-block;padding:.15rem .5rem;border-radius:5px;font-size:.7rem;font-weight:600;text-transform:uppercase;background:rgba(34,197,94,0.9);color:#000;}\n'+
+'    .content{color:var(--text-sec);font-size:1rem;line-height:1.8;}\n'+
+'    .content h1,.content h2,.content h3{color:var(--text);margin:1.5rem 0 .6rem;}\n'+
+'    .content h1{font-size:1.6rem;} .content h2{font-size:1.3rem;} .content h3{font-size:1.1rem;}\n'+
+'    .content p{margin-bottom:1rem;}\n'+
+'    .content ul,.content ol{margin:.5rem 0 1rem 1.5rem;}\n'+
+'    .content li{margin-bottom:.3rem;}\n'+
+'    .content code{background:var(--bg-card);padding:.1rem .35rem;border-radius:4px;font-size:.9em;}\n'+
+'    .content blockquote{border-left:3px solid var(--accent);padding-left:1rem;color:var(--text-muted);margin:1rem 0;}\n'+
+'    .content table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.92rem;}\n'+
+'    .content th,.content td{padding:.5rem .8rem;border:1px solid var(--border);text-align:left;}\n'+
+'    .content th{background:var(--bg-card);font-weight:600;color:var(--text);}\n'+
+'    .content strong{color:var(--text);}\n'+
+'    .content a{color:var(--accent);}\n'+
+'    .content img{max-width:100%;border-radius:8px;margin:1rem 0;}\n'+
+'    .content hr{border:none;border-top:1px solid var(--border);margin:2rem 0;}\n'+
+'    footer{border-top:1px solid var(--border);padding:1.5rem;text-align:center;}\n'+
+'    .footer-inner{max-width:1100px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:.6rem;}\n'+
+'    .footer-links{display:flex;gap:1.5rem;list-style:none;}\n'+
+'    .footer-links a{color:var(--text-muted);font-size:.82rem;}\n'+
+'    .footer-copy{color:var(--text-muted);font-size:.78rem;}\n'+
+'    @media(max-width:768px){.nav-links{display:none;}.article{padding:1.5rem 1rem 3rem;}}\n'+
+'  </style>\n'+
+'</head>\n<body>\n'+
+'  <nav><div class="nav-inner">\n'+
+'    <a href="https://autarkie-finder.com" class="logo"><div class="logo-dot"></div>Autarkie-Finder</a>\n'+
+'    <ul class="nav-links">\n'+
+'      <li><a href="https://autarkie-finder.com">Start</a></li>\n'+
+'      <li><a href="https://autarkie-finder.com/rechner">Rechner</a></li>\n'+
+'      <li><a href="https://autarkie-finder.com/vergleich">Vergleich</a></li>\n'+
+'      <li><a href="/">Blog</a></li>\n'+
+'      <li><a href="https://autarkie-finder.com/faq">FAQ</a></li>\n'+
+'    </ul>\n'+
+'    <button class="theme-toggle" onclick="var c=document.documentElement.getAttribute(\'data-theme\'),n=c===\'dark\'?\'light\':\'dark\';document.documentElement.setAttribute(\'data-theme\',n);localStorage.setItem(\'theme\',n);" aria-label="Theme"><div class="toggle-dot"></div></button>\n'+
+'  </div></nav>\n\n'+
+'  <article class="article">\n'+
+'    <a href="/" class="back-link">&larr; Zurück zum Blog</a>\n'+
+imgTag+'\n'+
+'    <h1>'+meta.title+'</h1>\n'+
+'    <div class="detail-meta">\n'+
+'      <span class="badge">'+catLabel+'</span>\n'+
+'      <span>'+dateStr+'</span>\n'+
+'      <span>'+(meta.reading_time||'5')+' Min. Lesezeit</span>\n'+
+'      <span>Von Autarkie-Finder</span>\n'+
+'    </div>\n'+
+'    <div class="content">\n'+bodyHTML+'\n    </div>\n'+
+'  </article>\n\n'+
+'  <footer><div class="footer-inner">\n'+
+'    <ul class="footer-links"><li><a href="https://autarkie-finder.com/impressum">Impressum</a></li><li><a href="https://autarkie-finder.com/datenschutz">Datenschutz</a></li></ul>\n'+
+'    <p class="footer-copy">&copy; 2026 Autarkie-Finder</p>\n'+
+'  </div></footer>\n'+
+'</body>\n</html>';
+    }
+
+    // ─── Create/update static HTML page on GitHub ───
+    async function publishStaticPage(meta, body, slug){
+      var bodyHTML = md2html(body);
+      var html = generateArticleHTML(meta, bodyHTML, slug);
+      var encoded = btoa(unescape(encodeURIComponent(html)));
+      var path = slug + '/index.html';
+
+      // Check if page already exists (to get sha for update)
+      var existing = await ghAPI('/contents/' + path + '?ref=' + BRANCH);
+      var payload = { message: 'Seite: ' + meta.title, content: encoded, branch: BRANCH };
+      if(existing.ok){
+        var data = await existing.json();
+        payload.sha = data.sha;
+      }
+
+      var res = await ghAPI('/contents/' + path, { method: 'PUT', body: JSON.stringify(payload) });
+      return res.ok;
+    }
+
+    // ─── Delete static HTML page ───
+    async function deleteStaticPage(slug){
+      var path = slug + '/index.html';
+      var res = await ghAPI('/contents/' + path + '?ref=' + BRANCH);
+      if(res.ok){
+        var data = await res.json();
+        await ghAPI('/contents/' + path, { method: 'DELETE', body: JSON.stringify({ message: 'Seite gelöscht: ' + slug, sha: data.sha, branch: BRANCH }) });
+      }
+    }
+
+    // ─── Parse frontmatter ───
+    function parseFM(txt){
+      var p=txt.split('---');if(p.length<3)return{m:{},b:txt};
+      var f=p[1],b=p.slice(2).join('---').trim(),m={};
+      f.split('\n').forEach(function(l){var x=l.match(/^(\w+):\s*"?(.+?)"?\s*$/);if(x)m[x[1]]=x[2];});
+      return{m:m,b:b};
+    }
+
+    // ─── Regenerate ALL static pages ───
+    async function regenerateAll(){
+      if(!confirm('Alle statischen Seiten neu generieren? Das kann einen Moment dauern.')) return;
+      showStatus('Regenerierung gestartet...','info');
+      try{
+        var res = await ghAPI('/contents/_posts?ref=' + BRANCH);
+        if(!res.ok){showStatus('Keine Posts gefunden.','error');return;}
+        var files = await res.json();
+        if(!Array.isArray(files)){showStatus('Fehler beim Laden.','error');return;}
+
+        var count = 0, total = files.filter(function(f){return f.name.endsWith('.md');}).length;
+
+        for(var i=0;i<files.length;i++){
+          var f=files[i];
+          if(!f.name.endsWith('.md')) continue;
+          showProgress('Regeneriere ' + (count+1) + ' von ' + total + '...');
+
+          var cr = await ghAPI('/contents/' + f.path + '?ref=' + BRANCH);
+          var cd = await cr.json();
+          var dec = decodeURIComponent(escape(atob(cd.content.replace(/\n/g,''))));
+          var parsed = parseFM(dec);
+          var meta = parsed.m;
+          var slug = f.name.replace(/^\d{4}-\d{2}-\d{2}-/,'').replace('.md','');
+
+          // Skip drafts
+          if(meta.status === 'draft') continue;
+          // Skip future scheduled
+          if(meta.status === 'scheduled'){
+            var pd=meta.publish_date||'',pt=meta.publish_time||'08:00';
+            if(pd && new Date(pd+'T'+pt) > new Date()) continue;
           }
 
-          var name = f.name.replace(/^\d{4}-\d{2}-\d{2}-/, '').replace('.md', '').replace(/-/g, ' ');
-          var date = f.name.substring(0, 10);
-          var div = document.createElement('div');
-          div.className = 'post-item';
-          div.innerHTML =
-            '<div class="post-item-info" onclick="editPost(\'' + f.path + '\')">' +
-              '<h4>' + name.charAt(0).toUpperCase() + name.slice(1) + '</h4>' +
-              '<div class="meta">' +
-                (catLabel ? '<span class="cat-tag">' + catLabel + '</span>' : '') +
-                statusTag +
-                '<span>' + date + '</span>' +
-              '</div>' +
-            '</div>' +
-            '<div class="post-item-actions">' +
-              '<button class="btn btn-sm btn-secondary" onclick="event.stopPropagation();editPost(\'' + f.path + '\')">Bearbeiten</button>' +
-              '<button class="btn btn-sm btn-danger" onclick="event.stopPropagation();deletePost(\'' + f.path + '\',\'' + contentData.sha + '\')">Löschen</button>' +
-            '</div>';
+          await publishStaticPage(meta, parsed.b, slug);
+          count++;
+        }
+
+        // Update sitemap
+        await updateSitemap();
+        showProgress('');
+        showStatus('Fertig! ' + count + ' Seiten regeneriert + Sitemap aktualisiert.','success');
+      }catch(e){
+        showProgress('');
+        showStatus('Fehler: '+e.message,'error');
+      }
+    }
+
+    // ─── Update Sitemap ───
+    async function updateSitemap(){
+      try{
+        var res=await ghAPI('/contents/_posts?ref='+BRANCH);
+        var files=await res.json();
+        if(!Array.isArray(files))return;
+        var today=new Date().toISOString().substring(0,10);
+        var xml='<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
+        xml+='  <url>\n    <loc>'+SITE+'/</loc>\n    <lastmod>'+today+'</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>1.0</priority>\n  </url>\n';
+        for(var i=0;i<files.length;i++){
+          var f=files[i];if(!f.name.endsWith('.md'))continue;
+          var slug=f.name.replace(/^\d{4}-\d{2}-\d{2}-/,'').replace('.md','');
+          var date=f.name.substring(0,10);
+          xml+='  <url>\n    <loc>'+SITE+'/'+slug+'/</loc>\n    <lastmod>'+date+'</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.8</priority>\n  </url>\n';
+        }
+        xml+='</urlset>';
+        var sr=await ghAPI('/contents/sitemap.xml?ref='+BRANCH);
+        var sb={message:'Sitemap aktualisiert',content:btoa(unescape(encodeURIComponent(xml))),branch:BRANCH};
+        if(sr.ok){var sd=await sr.json();sb.sha=sd.sha;}
+        await ghAPI('/contents/sitemap.xml',{method:'PUT',body:JSON.stringify(sb)});
+      }catch(e){console.error('Sitemap:',e);}
+    }
+
+    // ─── Load Posts ───
+    async function loadPosts(){
+      var container=document.getElementById('posts');
+      container.innerHTML='<div class="loading">Beiträge werden geladen...</div>';
+      try{
+        var res=await ghAPI('/contents/_posts?ref='+BRANCH);
+        if(res.status===404){container.innerHTML='<div class="empty">Noch keine Beiträge.</div>';return;}
+        var files=await res.json();
+        if(!files.length){container.innerHTML='<div class="empty">Noch keine Beiträge.</div>';return;}
+        files.sort(function(a,b){return b.name.localeCompare(a.name);});
+        container.innerHTML='';
+        for(var i=0;i<files.length;i++){
+          var f=files[i];
+          var cr=await ghAPI('/contents/'+f.path+'?ref='+BRANCH);
+          var cd=await cr.json();
+          var dec=decodeURIComponent(escape(atob(cd.content.replace(/\n/g,''))));
+          var catMatch=dec.match(/category:\s*(\w+)/);
+          var cat=catMatch?catMatch[1]:'';
+          var catLabel=categoryLabels[cat]||cat;
+          var statusMatch=dec.match(/status:\s*(\w+)/);
+          var postStatus=statusMatch?statusMatch[1]:'publish';
+          var statusTag='';
+          if(postStatus==='scheduled'){statusTag='<span class="status-tag scheduled">Geplant</span>';}
+          else if(postStatus==='draft'){statusTag='<span class="status-tag draft">Entwurf</span>';}
+          else{statusTag='<span class="status-tag live">Live</span>';}
+          var name=f.name.replace(/^\d{4}-\d{2}-\d{2}-/,'').replace('.md','').replace(/-/g,' ');
+          var date=f.name.substring(0,10);
+          var slug=f.name.replace(/^\d{4}-\d{2}-\d{2}-/,'').replace('.md','');
+          var div=document.createElement('div');div.className='post-item';
+          div.innerHTML='<div class="post-item-info" onclick="editPost(\''+f.path+'\')"><h4>'+name.charAt(0).toUpperCase()+name.slice(1)+'</h4><div class="meta">'+(catLabel?'<span class="cat-tag">'+catLabel+'</span>':'')+statusTag+'<span>'+date+'</span></div></div><div class="post-item-actions"><button class="btn btn-sm btn-secondary" onclick="event.stopPropagation();editPost(\''+f.path+'\')">Bearbeiten</button><button class="btn btn-sm btn-danger" onclick="event.stopPropagation();deletePost(\''+f.path+'\',\''+cd.sha+'\',\''+slug+'\')">Löschen</button></div>';
           container.appendChild(div);
         }
-      } catch (e) {
-        container.innerHTML = '<div class="empty" style="color:#ef4444;">Fehler: ' + e.message + '</div>';
-      }
+      }catch(e){container.innerHTML='<div class="empty" style="color:#ef4444;">Fehler: '+e.message+'</div>';}
     }
 
-    function newPost() {
-      editingPath = null;
-      editingSha = null;
-      document.getElementById('editorTitle').textContent = 'Neuer Beitrag';
-      document.getElementById('postTitle').value = '';
-      document.getElementById('postCategory').value = 'energie';
-      document.getElementById('postDesc').value = '';
-      document.getElementById('postTime').value = '5';
-      document.getElementById('postContent').value = '';
-      document.getElementById('postImage').value = '';
-      document.getElementById('postImageAlt').value = '';
-      document.getElementById('postKeywords').value = '';
-      document.getElementById('postSlug').value = '';
-      document.getElementById('postStatus').value = 'publish';
-      document.getElementById('postDate').value = '';
-      document.getElementById('postTimeSchedule').value = '08:00';
-      document.getElementById('scheduleFields').style.display = 'none';
-      document.getElementById('imagePreview').style.display = 'none';
-      document.getElementById('descCount').textContent = '0 / 160';
-      document.getElementById('postList').style.display = 'none';
-      document.getElementById('editor').style.display = 'block';
-      window.scrollTo(0, 0);
+    function newPost(){
+      editingPath=null;editingSha=null;
+      document.getElementById('editorTitle').textContent='Neuer Beitrag';
+      ['postTitle','postDesc','postContent','postImage','postImageAlt','postKeywords','postSlug'].forEach(function(id){document.getElementById(id).value='';});
+      document.getElementById('postCategory').value='energie';
+      document.getElementById('postTime').value='5';
+      document.getElementById('postStatus').value='publish';
+      document.getElementById('postDate').value='';
+      document.getElementById('postTimeSchedule').value='08:00';
+      document.getElementById('scheduleFields').style.display='none';
+      document.getElementById('saveBtn').textContent='Veröffentlichen';
+      document.getElementById('imagePreview').style.display='none';
+      document.getElementById('descCount').textContent='0 / 160';
+      document.getElementById('postList').style.display='none';
+      document.getElementById('editor').style.display='block';
+      window.scrollTo(0,0);
     }
 
-    function toggleSchedule() {
-      var status = document.getElementById('postStatus').value;
-      var fields = document.getElementById('scheduleFields');
-      var btn = document.getElementById('saveBtn');
-      if (status === 'scheduled') {
-        fields.style.display = 'block';
-        btn.textContent = 'Planen';
-        // Default to tomorrow 8:00
-        if (!document.getElementById('postDate').value) {
-          var tomorrow = new Date();
-          tomorrow.setDate(tomorrow.getDate() + 1);
-          document.getElementById('postDate').value = tomorrow.toISOString().substring(0, 10);
+    async function editPost(path){
+      document.getElementById('postList').style.display='none';
+      document.getElementById('editor').style.display='block';
+      document.getElementById('editorTitle').textContent='Beitrag bearbeiten';
+      window.scrollTo(0,0);
+      try{
+        var res=await ghAPI('/contents/'+path+'?ref='+BRANCH);
+        var data=await res.json();
+        var content=decodeURIComponent(escape(atob(data.content.replace(/\n/g,''))));
+        editingPath=path;editingSha=data.sha;
+        var parts=content.split('---');
+        if(parts.length>=3){
+          var front=parts[1],body=parts.slice(2).join('---').trim();
+          var gv=function(k){var m=front.match(new RegExp(k+':\\s*"?([^"\\n]*)"?'));return m?m[1].trim():'';};
+          document.getElementById('postTitle').value=gv('title');
+          document.getElementById('postCategory').value=gv('category')||'energie';
+          document.getElementById('postDesc').value=gv('description');
+          document.getElementById('postTime').value=gv('reading_time')||'5';
+          document.getElementById('postImage').value=gv('image');
+          document.getElementById('postImageAlt').value=gv('image_alt');
+          document.getElementById('postKeywords').value=gv('keywords');
+          document.getElementById('postSlug').value=path.replace('_posts/','').replace(/^\d{4}-\d{2}-\d{2}-/,'').replace('.md','');
+          document.getElementById('postContent').value=body;
+          var ps=gv('status')||'publish';
+          document.getElementById('postStatus').value=ps;
+          if(ps==='scheduled'){document.getElementById('postDate').value=gv('publish_date');document.getElementById('postTimeSchedule').value=gv('publish_time')||'08:00';document.getElementById('scheduleFields').style.display='block';updateScheduleInfo();}
+          else{document.getElementById('scheduleFields').style.display='none';}
+          toggleSchedule();
+          previewImage();updateCharCount('postDesc','descCount',160);
         }
-        updateScheduleInfo();
-      } else if (status === 'draft') {
-        fields.style.display = 'none';
-        btn.textContent = 'Als Entwurf speichern';
-      } else {
-        fields.style.display = 'none';
-        btn.textContent = 'Veröffentlichen';
-      }
+      }catch(e){showStatus('Fehler: '+e.message,'error');}
     }
 
-    function updateScheduleInfo() {
-      var date = document.getElementById('postDate').value;
-      var time = document.getElementById('postTimeSchedule').value;
-      var info = document.getElementById('scheduleInfo');
-      if (date && time) {
-        var d = new Date(date + 'T' + time);
-        var now = new Date();
-        var diff = d - now;
-        if (diff <= 0) {
-          info.innerHTML = '⚠️ Dieses Datum liegt in der Vergangenheit – wird sofort veröffentlicht.';
-          info.style.color = '#eab308';
-        } else {
-          var hours = Math.floor(diff / 3600000);
-          var days = Math.floor(hours / 24);
-          var remainder = hours % 24;
-          var timeStr = days > 0 ? days + ' Tag' + (days > 1 ? 'e' : '') + ' und ' + remainder + ' Std.' : hours + ' Stunden';
-          info.innerHTML = '📅 Wird veröffentlicht in ' + timeStr;
-          info.style.color = '#22c55e';
-        }
-      }
-    }
-
-    async function editPost(path) {
-      document.getElementById('postList').style.display = 'none';
-      document.getElementById('editor').style.display = 'block';
-      document.getElementById('editorTitle').textContent = 'Beitrag bearbeiten';
-      window.scrollTo(0, 0);
-      try {
-        var res = await ghAPI('/contents/' + path + '?ref=' + BRANCH);
-        var data = await res.json();
-        var content = decodeURIComponent(escape(atob(data.content.replace(/\n/g, ''))));
-        editingPath = path;
-        editingSha = data.sha;
-        var parts = content.split('---');
-        if (parts.length >= 3) {
-          var front = parts[1];
-          var body = parts.slice(2).join('---').trim();
-          var gv = function(key) {
-            var m = front.match(new RegExp(key + ':\\s*"?([^"\\n]*)"?'));
-            return m ? m[1].trim() : '';
-          };
-          document.getElementById('postTitle').value = gv('title');
-          document.getElementById('postCategory').value = gv('category') || 'energie';
-          document.getElementById('postDesc').value = gv('description');
-          document.getElementById('postTime').value = gv('reading_time') || '5';
-          document.getElementById('postImage').value = gv('image');
-          document.getElementById('postImageAlt').value = gv('image_alt');
-          document.getElementById('postKeywords').value = gv('keywords');
-          document.getElementById('postSlug').value = path.replace('_posts/', '').replace(/^\d{4}-\d{2}-\d{2}-/, '').replace('.md', '');
-          document.getElementById('postContent').value = body;
-          // Load status
-          var postStatusVal = gv('status') || 'publish';
-          var publishDate = gv('publish_date') || '';
-          var publishTime = gv('publish_time') || '08:00';
-          document.getElementById('postStatus').value = postStatusVal;
-          if (postStatusVal === 'scheduled') {
-            document.getElementById('postDate').value = publishDate;
-            document.getElementById('postTimeSchedule').value = publishTime;
-            document.getElementById('scheduleFields').style.display = 'block';
-            updateScheduleInfo();
-          } else {
-            document.getElementById('scheduleFields').style.display = 'none';
-          }
-          previewImage();
-          updateCharCount('postDesc', 'descCount', 160);
-        }
-      } catch (e) {
-        showStatus('Fehler beim Laden: ' + e.message, 'error');
-      }
-    }
-
-    async function deletePost(path, sha) {
-      if (!confirm('Beitrag wirklich löschen?')) return;
-      try {
-        var res = await ghAPI('/contents/' + path, {
-          method: 'DELETE',
-          body: JSON.stringify({ message: 'Beitrag gelöscht', sha: sha, branch: BRANCH })
-        });
-        if (res.ok) {
-          showStatus('Beitrag gelöscht! Sitemap wird aktualisiert...', 'success');
+    async function deletePost(path,sha,slug){
+      if(!confirm('Beitrag wirklich löschen?'))return;
+      try{
+        var res=await ghAPI('/contents/'+path,{method:'DELETE',body:JSON.stringify({message:'Gelöscht',sha:sha,branch:BRANCH})});
+        if(res.ok){
+          showStatus('Beitrag gelöscht. Seite wird entfernt...','info');
+          await deleteStaticPage(slug);
           await updateSitemap();
+          showStatus('Beitrag und Seite gelöscht!','success');
           loadPosts();
-        } else {
-          var err = await res.json();
-          showStatus('Fehler: ' + (err.message || 'Unbekannt'), 'error');
-        }
-      } catch (e) {
-        showStatus('Fehler: ' + e.message, 'error');
-      }
+        }else{var err=await res.json();showStatus('Fehler: '+(err.message||'Unbekannt'),'error');}
+      }catch(e){showStatus('Fehler: '+e.message,'error');}
     }
 
-    async function savePost() {
-      var title = document.getElementById('postTitle').value.trim();
-      var category = document.getElementById('postCategory').value;
-      var desc = document.getElementById('postDesc').value.trim();
-      var time = document.getElementById('postTime').value;
-      var content = document.getElementById('postContent').value;
-      var image = document.getElementById('postImage').value.trim();
-      var imageAlt = document.getElementById('postImageAlt').value.trim();
-      var keywords = document.getElementById('postKeywords').value.trim();
-      var customSlug = document.getElementById('postSlug').value.trim();
+    async function savePost(){
+      var title=document.getElementById('postTitle').value.trim();
+      var category=document.getElementById('postCategory').value;
+      var desc=document.getElementById('postDesc').value.trim();
+      var time=document.getElementById('postTime').value;
+      var content=document.getElementById('postContent').value;
+      var image=document.getElementById('postImage').value.trim();
+      var imageAlt=document.getElementById('postImageAlt').value.trim();
+      var keywords=document.getElementById('postKeywords').value.trim();
+      var customSlug=document.getElementById('postSlug').value.trim();
+      var status=document.getElementById('postStatus').value;
+      var schedDate=document.getElementById('postDate').value;
+      var schedTime=document.getElementById('postTimeSchedule').value||'08:00';
 
-      if (!title) { showStatus('Bitte Titel eingeben', 'error'); return; }
-      if (!content) { showStatus('Bitte Inhalt eingeben', 'error'); return; }
-      if (!desc) { showStatus('Bitte SEO-Beschreibung eingeben', 'error'); return; }
+      if(!title){showStatus('Bitte Titel eingeben','error');return;}
+      if(!content){showStatus('Bitte Inhalt eingeben','error');return;}
+      if(!desc){showStatus('Bitte SEO-Beschreibung eingeben','error');return;}
 
-      var status = document.getElementById('postStatus').value;
-      var schedDate = document.getElementById('postDate').value;
-      var schedTime = document.getElementById('postTimeSchedule').value || '08:00';
+      if(status==='scheduled'&&schedDate&&new Date(schedDate+'T'+schedTime)<=new Date())status='publish';
 
-      // If scheduled date is in the past, publish immediately
-      if (status === 'scheduled' && schedDate) {
-        var schedDT = new Date(schedDate + 'T' + schedTime);
-        if (schedDT <= new Date()) status = 'publish';
-      }
+      var now=new Date();
+      var dateStr=(status==='scheduled'&&schedDate)?schedDate:now.toISOString().substring(0,10);
+      var slug=customSlug||generateSlug(title);
 
-      var now = new Date();
-      var dateStr = (status === 'scheduled' && schedDate) ? schedDate : now.toISOString().substring(0, 10);
-      var slug = customSlug || generateSlug(title);
+      var fm='---\ntitle: "'+title.replace(/"/g,'\\"')+'"\ndate: '+dateStr+'\nauthor: Autarkie-Finder\ncategory: '+category+'\ndescription: "'+desc.replace(/"/g,'\\"')+'"\nreading_time: '+time+'\nstatus: '+status+'\n';
+      if(status==='scheduled'){fm+='publish_date: "'+schedDate+'"\npublish_time: "'+schedTime+'"\n';}
+      if(image)fm+='image: "'+image+'"\n';
+      if(imageAlt)fm+='image_alt: "'+imageAlt+'"\n';
+      if(keywords)fm+='keywords: "'+keywords+'"\n';
+      fm+='featured: false\n---\n\n';
 
-      var fm = '---\n';
-      fm += 'title: "' + title.replace(/"/g, '\\"') + '"\n';
-      fm += 'date: ' + dateStr + '\n';
-      fm += 'author: Autarkie-Finder\n';
-      fm += 'category: ' + category + '\n';
-      fm += 'description: "' + desc.replace(/"/g, '\\"') + '"\n';
-      fm += 'reading_time: ' + time + '\n';
-      fm += 'status: ' + status + '\n';
-      if (status === 'scheduled') {
-        fm += 'publish_date: "' + schedDate + '"\n';
-        fm += 'publish_time: "' + schedTime + '"\n';
-      }
-      if (image) fm += 'image: "' + image + '"\n';
-      if (imageAlt) fm += 'image_alt: "' + imageAlt + '"\n';
-      if (keywords) fm += 'keywords: "' + keywords + '"\n';
-      fm += 'featured: false\n';
-      fm += '---\n\n';
+      var fullContent=fm+content;
+      var encoded=btoa(unescape(encodeURIComponent(fullContent)));
+      var path=editingPath||'_posts/'+dateStr+'-'+slug+'.md';
+      var body={message:editingPath?'Update: '+title:'Neu: '+title,content:encoded,branch:BRANCH};
+      if(editingSha)body.sha=editingSha;
 
-      var fullContent = fm + content;
-      var encoded = btoa(unescape(encodeURIComponent(fullContent)));
-      var path = editingPath || '_posts/' + dateStr + '-' + slug + '.md';
-
-      var body = { message: editingPath ? 'Update: ' + title : 'Neu: ' + title, content: encoded, branch: BRANCH };
-      if (editingSha) body.sha = editingSha;
-
-      try {
-        var res = await ghAPI('/contents/' + path, { method: 'PUT', body: JSON.stringify(body) });
-        if (res.ok) {
-          showStatus('Beitrag veröffentlicht! Sitemap wird aktualisiert...', 'success');
+      try{
+        showStatus('Beitrag wird gespeichert...','info');
+        var res=await ghAPI('/contents/'+path,{method:'PUT',body:JSON.stringify(body)});
+        if(res.ok){
+          // Generate static HTML page if not draft
+          if(status==='publish'){
+            showStatus('Statische Seite wird generiert...','info');
+            var meta={title:title,date:dateStr,category:category,description:desc,reading_time:time,image:image,image_alt:imageAlt,keywords:keywords};
+            await publishStaticPage(meta,content,slug);
+          }
+          // Update sitemap
+          showStatus('Sitemap wird aktualisiert...','info');
           await updateSitemap();
+          showStatus('Beitrag veröffentlicht + statische Seite erstellt!','success');
           showList();
-        } else {
-          var err = await res.json();
-          showStatus('Fehler: ' + (err.message || 'Unbekannt'), 'error');
-        }
-      } catch (e) {
-        showStatus('Fehler: ' + e.message, 'error');
-      }
+        }else{var err=await res.json();showStatus('Fehler: '+(err.message||'Unbekannt'),'error');}
+      }catch(e){showStatus('Fehler: '+e.message,'error');}
     }
 
-    async function updateSitemap() {
-      try {
-        // Get all posts
-        var res = await ghAPI('/contents/_posts?ref=' + BRANCH);
-        var files = await res.json();
-        if (!Array.isArray(files)) return;
-
-        var today = new Date().toISOString().substring(0, 10);
-
-        var xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
-        xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
-        xml += '  <url>\n';
-        xml += '    <loc>https://blog.autarkie-finder.com/</loc>\n';
-        xml += '    <lastmod>' + today + '</lastmod>\n';
-        xml += '    <changefreq>weekly</changefreq>\n';
-        xml += '    <priority>1.0</priority>\n';
-        xml += '  </url>\n';
-
-        for (var i = 0; i < files.length; i++) {
-          var f = files[i];
-          if (!f.name.endsWith('.md')) continue;
-          var slug = f.name.replace(/^\d{4}-\d{2}-\d{2}-/, '').replace('.md', '');
-          var date = f.name.substring(0, 10);
-          xml += '  <url>\n';
-          xml += '    <loc>https://blog.autarkie-finder.com/' + slug + '</loc>\n';
-          xml += '    <lastmod>' + date + '</lastmod>\n';
-          xml += '    <changefreq>monthly</changefreq>\n';
-          xml += '    <priority>0.8</priority>\n';
-          xml += '  </url>\n';
-        }
-
-        xml += '</urlset>';
-
-        // Get current sitemap sha
-        var sitemapRes = await ghAPI('/contents/sitemap.xml?ref=' + BRANCH);
-        var sitemapBody = { message: 'Sitemap aktualisiert', content: btoa(unescape(encodeURIComponent(xml))), branch: BRANCH };
-        if (sitemapRes.ok) {
-          var sitemapData = await sitemapRes.json();
-          sitemapBody.sha = sitemapData.sha;
-        }
-
-        await ghAPI('/contents/sitemap.xml', { method: 'PUT', body: JSON.stringify(sitemapBody) });
-      } catch (e) {
-        console.error('Sitemap update failed:', e);
-      }
+    function previewPost(){
+      var t=document.getElementById('postTitle').value||'Ohne Titel';
+      var c=document.getElementById('postContent').value||'';
+      var img=document.getElementById('postImage').value||'';
+      var h='<h1 style="font-size:1.6rem;margin-bottom:1rem;">'+t+'</h1>';
+      if(img)h+='<img src="'+img+'" style="width:100%;border-radius:8px;margin-bottom:1rem;" onerror="this.style.display=\'none\'">';
+      h+='<div style="line-height:1.8;">'+md2html(c)+'</div>';
+      document.getElementById('previewContent').innerHTML=h;
+      document.getElementById('previewModal').style.display='block';
     }
 
-    function previewPost() {
-      var title = document.getElementById('postTitle').value || 'Ohne Titel';
-      var content = document.getElementById('postContent').value || '';
-      var image = document.getElementById('postImage').value || '';
-      var html = '<h1 style="font-size:1.6rem;margin-bottom:1rem;">' + title + '</h1>';
-      if (image) html += '<img src="' + image + '" style="width:100%;border-radius:8px;margin-bottom:1rem;" onerror="this.style.display=\'none\'">';
-      html += '<div style="line-height:1.8;">' + content.replace(/\n/g, '<br>') + '</div>';
-      document.getElementById('previewContent').innerHTML = html;
-      document.getElementById('previewModal').style.display = 'block';
-    }
-
-    // Auto-generate slug from title
-    document.getElementById('postTitle').addEventListener('input', function() {
-      if (!editingPath) {
-        document.getElementById('postSlug').value = generateSlug(this.value);
-      }
-    });
-
-    // Update schedule info when date/time changes
-    document.getElementById('postDate').addEventListener('input', updateScheduleInfo);
-    document.getElementById('postTimeSchedule').addEventListener('input', updateScheduleInfo);
+    document.getElementById('postTitle').addEventListener('input',function(){if(!editingPath){document.getElementById('postSlug').value=generateSlug(this.value);}});
+    document.getElementById('postDate').addEventListener('input',updateScheduleInfo);
+    document.getElementById('postTimeSchedule').addEventListener('input',updateScheduleInfo);
   </script>
-
 </body>
 </html>
