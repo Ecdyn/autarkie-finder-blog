@@ -447,9 +447,25 @@
       window.scrollTo(0,0);
       document.title=post.title+' – Autarkie-Finder Blog';
 
-      // Update meta description for SEO (client-side)
+      // Set URL hash for sharing and SEO
+      var slug=post.fn.replace(/^\d{4}-\d{2}-\d{2}-/,'').replace('.md','');
+      history.pushState({slug:slug},'','/'+slug);
+
+      // Update meta description
       var metaDesc=document.querySelector('meta[name="description"]');
       if(metaDesc && post.description) metaDesc.setAttribute('content',post.description);
+
+      // Update canonical URL
+      var canonical=document.querySelector('link[rel="canonical"]');
+      if(canonical) canonical.setAttribute('href','https://blog.autarkie-finder.com/'+slug);
+
+      // Update Open Graph
+      var ogUrl=document.querySelector('meta[property="og:url"]');
+      if(ogUrl) ogUrl.setAttribute('content','https://blog.autarkie-finder.com/'+slug);
+      var ogTitle=document.querySelector('meta[property="og:title"]');
+      if(ogTitle) ogTitle.setAttribute('content',post.title);
+      var ogDesc=document.querySelector('meta[property="og:description"]');
+      if(ogDesc && post.description) ogDesc.setAttribute('content',post.description);
     }
 
     function showBlogList(){
@@ -457,6 +473,13 @@
       document.getElementById('blogView').style.display='block';
       document.title='Blog – Autarkie-Finder | Tipps für autarkes Leben';
       document.querySelector('meta[name="description"]').setAttribute('content','Autarkie-Finder Blog: Tipps, Anleitungen und Wissen rund um autarkes Leben.');
+      history.pushState({},'','/');
+      var canonical=document.querySelector('link[rel="canonical"]');
+      if(canonical) canonical.setAttribute('href','https://blog.autarkie-finder.com');
+      var ogUrl=document.querySelector('meta[property="og:url"]');
+      if(ogUrl) ogUrl.setAttribute('content','https://blog.autarkie-finder.com');
+      var ogTitle=document.querySelector('meta[property="og:title"]');
+      if(ogTitle) ogTitle.setAttribute('content','Blog – Autarkie-Finder');
       window.scrollTo(0,0);
     }
 
@@ -471,7 +494,51 @@
 
     function toggleMenu(){document.getElementById('mobileMenu').classList.toggle('open');}
 
-    loadPosts();
+    // URL Router - check if we're on an article URL
+    function checkRoute(){
+      // Check for redirect from 404.html
+      var redirectPath=sessionStorage.getItem('redirect_path');
+      if(redirectPath){
+        sessionStorage.removeItem('redirect_path');
+        history.replaceState({},'',redirectPath);
+      }
+
+      var path=window.location.pathname.replace(/^\//,'').replace(/\/$/,'');
+      if(path && path!=='index.html' && path!=='admin'){
+        // We're on an article URL, find and show the post
+        var found=allPosts.find(function(p){
+          var slug=p.fn.replace(/^\d{4}-\d{2}-\d{2}-/,'').replace('.md','');
+          return slug===path;
+        });
+        if(found) showPost(found);
+        else showBlogList();
+      }else{
+        showBlogList();
+      }
+    }
+
+    // Handle browser back/forward buttons
+    window.addEventListener('popstate',function(){
+      var path=window.location.pathname.replace(/^\//,'').replace(/\/$/,'');
+      if(path && path!=='index.html'){
+        var found=allPosts.find(function(p){
+          var slug=p.fn.replace(/^\d{4}-\d{2}-\d{2}-/,'').replace('.md','');
+          return slug===path;
+        });
+        if(found){showPost(found);return;}
+      }
+      document.getElementById('postDetail').style.display='none';
+      document.getElementById('blogView').style.display='block';
+      document.title='Blog – Autarkie-Finder | Tipps für autarkes Leben';
+      window.scrollTo(0,0);
+    });
+
+    // Load posts and then check route
+    async function init(){
+      await loadPosts();
+      checkRoute();
+    }
+    init();
   </script>
 
 </body>
