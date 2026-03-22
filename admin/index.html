@@ -56,6 +56,10 @@
     .post-item-info h4 { font-size: 0.95rem; margin-bottom: 0.2rem; }
     .post-item-info .meta { font-size: 0.78rem; color: #666; display: flex; gap: 0.8rem; flex-wrap: wrap; }
     .post-item-info .cat-tag { background: rgba(34,197,94,0.15); color: #22c55e; padding: 0.1rem 0.5rem; border-radius: 4px; font-size: 0.72rem; font-weight: 600; text-transform: uppercase; }
+    .post-item-info .status-tag { padding: 0.1rem 0.5rem; border-radius: 4px; font-size: 0.72rem; font-weight: 600; text-transform: uppercase; }
+    .post-item-info .status-tag.scheduled { background: rgba(234,179,8,0.15); color: #eab308; }
+    .post-item-info .status-tag.draft { background: rgba(156,163,175,0.15); color: #9ca3af; }
+    .post-item-info .status-tag.live { background: rgba(34,197,94,0.15); color: #22c55e; }
     .post-item-actions { display: flex; gap: 0.4rem; flex-shrink: 0; }
 
     /* Editor */
@@ -166,6 +170,32 @@
           </div>
         </div>
 
+        <!-- Planung -->
+        <div class="editor-section">
+          <div class="editor-section-title">Veröffentlichung</div>
+          <div class="field">
+            <label>Status</label>
+            <select id="postStatus" onchange="toggleSchedule()">
+              <option value="publish">Sofort veröffentlichen</option>
+              <option value="scheduled">Geplant (Datum & Uhrzeit)</option>
+              <option value="draft">Entwurf (nicht sichtbar)</option>
+            </select>
+          </div>
+          <div id="scheduleFields" style="display:none;">
+            <div class="field-row">
+              <div class="field">
+                <label>Veröffentlichungsdatum</label>
+                <input type="date" id="postDate">
+              </div>
+              <div class="field">
+                <label>Uhrzeit</label>
+                <input type="time" id="postTimeSchedule" value="08:00">
+              </div>
+            </div>
+            <div id="scheduleInfo" style="font-size:0.8rem;color:#888;margin-top:-0.5rem;margin-bottom:1rem;"></div>
+          </div>
+        </div>
+
         <!-- Bild -->
         <div class="editor-section">
           <div class="editor-section-title">Beitragsbild</div>
@@ -199,7 +229,7 @@
         </div>
 
         <div class="editor-actions">
-          <button class="btn" onclick="savePost()">Veröffentlichen</button>
+          <button class="btn" id="saveBtn" onclick="savePost()">Veröffentlichen</button>
           <button class="btn btn-secondary" onclick="previewPost()">Vorschau</button>
           <button class="btn btn-secondary" onclick="showList()">Abbrechen</button>
         </div>
@@ -319,6 +349,26 @@
           var catMatch = decoded.match(/category:\s*(\w+)/);
           var cat = catMatch ? catMatch[1] : '';
           var catLabel = categoryLabels[cat] || cat;
+          var statusMatch = decoded.match(/status:\s*(\w+)/);
+          var postStatus = statusMatch ? statusMatch[1] : 'publish';
+          var publishDateMatch = decoded.match(/publish_date:\s*"?([^"\n]*)"?/);
+          var publishTimeMatch = decoded.match(/publish_time:\s*"?([^"\n]*)"?/);
+
+          // Check if scheduled post should be live
+          var statusTag = '';
+          if (postStatus === 'scheduled') {
+            var pd = publishDateMatch ? publishDateMatch[1] : '';
+            var pt = publishTimeMatch ? publishTimeMatch[1] : '08:00';
+            if (pd && new Date(pd + 'T' + pt) <= new Date()) {
+              statusTag = '<span class="status-tag live">Live</span>';
+            } else {
+              statusTag = '<span class="status-tag scheduled">Geplant' + (pd ? ' · ' + pd + ' ' + pt : '') + '</span>';
+            }
+          } else if (postStatus === 'draft') {
+            statusTag = '<span class="status-tag draft">Entwurf</span>';
+          } else {
+            statusTag = '<span class="status-tag live">Live</span>';
+          }
 
           var name = f.name.replace(/^\d{4}-\d{2}-\d{2}-/, '').replace('.md', '').replace(/-/g, ' ');
           var date = f.name.substring(0, 10);
@@ -329,6 +379,7 @@
               '<h4>' + name.charAt(0).toUpperCase() + name.slice(1) + '</h4>' +
               '<div class="meta">' +
                 (catLabel ? '<span class="cat-tag">' + catLabel + '</span>' : '') +
+                statusTag +
                 '<span>' + date + '</span>' +
               '</div>' +
             '</div>' +
@@ -356,11 +407,60 @@
       document.getElementById('postImageAlt').value = '';
       document.getElementById('postKeywords').value = '';
       document.getElementById('postSlug').value = '';
+      document.getElementById('postStatus').value = 'publish';
+      document.getElementById('postDate').value = '';
+      document.getElementById('postTimeSchedule').value = '08:00';
+      document.getElementById('scheduleFields').style.display = 'none';
       document.getElementById('imagePreview').style.display = 'none';
       document.getElementById('descCount').textContent = '0 / 160';
       document.getElementById('postList').style.display = 'none';
       document.getElementById('editor').style.display = 'block';
       window.scrollTo(0, 0);
+    }
+
+    function toggleSchedule() {
+      var status = document.getElementById('postStatus').value;
+      var fields = document.getElementById('scheduleFields');
+      var btn = document.getElementById('saveBtn');
+      if (status === 'scheduled') {
+        fields.style.display = 'block';
+        btn.textContent = 'Planen';
+        // Default to tomorrow 8:00
+        if (!document.getElementById('postDate').value) {
+          var tomorrow = new Date();
+          tomorrow.setDate(tomorrow.getDate() + 1);
+          document.getElementById('postDate').value = tomorrow.toISOString().substring(0, 10);
+        }
+        updateScheduleInfo();
+      } else if (status === 'draft') {
+        fields.style.display = 'none';
+        btn.textContent = 'Als Entwurf speichern';
+      } else {
+        fields.style.display = 'none';
+        btn.textContent = 'Veröffentlichen';
+      }
+    }
+
+    function updateScheduleInfo() {
+      var date = document.getElementById('postDate').value;
+      var time = document.getElementById('postTimeSchedule').value;
+      var info = document.getElementById('scheduleInfo');
+      if (date && time) {
+        var d = new Date(date + 'T' + time);
+        var now = new Date();
+        var diff = d - now;
+        if (diff <= 0) {
+          info.innerHTML = '⚠️ Dieses Datum liegt in der Vergangenheit – wird sofort veröffentlicht.';
+          info.style.color = '#eab308';
+        } else {
+          var hours = Math.floor(diff / 3600000);
+          var days = Math.floor(hours / 24);
+          var remainder = hours % 24;
+          var timeStr = days > 0 ? days + ' Tag' + (days > 1 ? 'e' : '') + ' und ' + remainder + ' Std.' : hours + ' Stunden';
+          info.innerHTML = '📅 Wird veröffentlicht in ' + timeStr;
+          info.style.color = '#22c55e';
+        }
+      }
     }
 
     async function editPost(path) {
@@ -391,6 +491,19 @@
           document.getElementById('postKeywords').value = gv('keywords');
           document.getElementById('postSlug').value = path.replace('_posts/', '').replace(/^\d{4}-\d{2}-\d{2}-/, '').replace('.md', '');
           document.getElementById('postContent').value = body;
+          // Load status
+          var postStatusVal = gv('status') || 'publish';
+          var publishDate = gv('publish_date') || '';
+          var publishTime = gv('publish_time') || '08:00';
+          document.getElementById('postStatus').value = postStatusVal;
+          if (postStatusVal === 'scheduled') {
+            document.getElementById('postDate').value = publishDate;
+            document.getElementById('postTimeSchedule').value = publishTime;
+            document.getElementById('scheduleFields').style.display = 'block';
+            updateScheduleInfo();
+          } else {
+            document.getElementById('scheduleFields').style.display = 'none';
+          }
           previewImage();
           updateCharCount('postDesc', 'descCount', 160);
         }
@@ -434,8 +547,18 @@
       if (!content) { showStatus('Bitte Inhalt eingeben', 'error'); return; }
       if (!desc) { showStatus('Bitte SEO-Beschreibung eingeben', 'error'); return; }
 
+      var status = document.getElementById('postStatus').value;
+      var schedDate = document.getElementById('postDate').value;
+      var schedTime = document.getElementById('postTimeSchedule').value || '08:00';
+
+      // If scheduled date is in the past, publish immediately
+      if (status === 'scheduled' && schedDate) {
+        var schedDT = new Date(schedDate + 'T' + schedTime);
+        if (schedDT <= new Date()) status = 'publish';
+      }
+
       var now = new Date();
-      var dateStr = now.toISOString().substring(0, 10);
+      var dateStr = (status === 'scheduled' && schedDate) ? schedDate : now.toISOString().substring(0, 10);
       var slug = customSlug || generateSlug(title);
 
       var fm = '---\n';
@@ -445,6 +568,11 @@
       fm += 'category: ' + category + '\n';
       fm += 'description: "' + desc.replace(/"/g, '\\"') + '"\n';
       fm += 'reading_time: ' + time + '\n';
+      fm += 'status: ' + status + '\n';
+      if (status === 'scheduled') {
+        fm += 'publish_date: "' + schedDate + '"\n';
+        fm += 'publish_time: "' + schedTime + '"\n';
+      }
       if (image) fm += 'image: "' + image + '"\n';
       if (imageAlt) fm += 'image_alt: "' + imageAlt + '"\n';
       if (keywords) fm += 'keywords: "' + keywords + '"\n';
@@ -537,6 +665,10 @@
         document.getElementById('postSlug').value = generateSlug(this.value);
       }
     });
+
+    // Update schedule info when date/time changes
+    document.getElementById('postDate').addEventListener('input', updateScheduleInfo);
+    document.getElementById('postTimeSchedule').addEventListener('input', updateScheduleInfo);
   </script>
 
 </body>
