@@ -2,7 +2,8 @@ backend:
   name: github
   repo: ecdyn/autarkie-finder-blog
   branch: main
-  site_domain: heartfelt-hamster-babbea.netlify.app
+  auth_type: pkce
+  app_id: Ov23liCFT2CwnOBzXLXk
 
 media_folder: "images/uploads"
 public_folder: "/images/uploads"
@@ -30,6 +31,4 @@ collections:
           - { label: "Technik", value: "technik" }
       - { label: "Beitragsbild", name: "image", widget: "image", required: false }
       - { label: "Beschreibung (SEO)", name: "description", widget: "text" }
-      - { label: "Lesezeit (Minuten)", name: "reading_time", widget: "number", default: 5 }
-      - { label: "Empfohlen", name: "featured", widget: "boolean", default: false }
-      - { label: "Inhalt", name: "body", widget: "markdown" }
+      - { label: "Lesezeit (Minuten)", name: "reading_time", wi
