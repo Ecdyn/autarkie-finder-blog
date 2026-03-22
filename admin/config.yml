@@ -1,17 +1,12 @@
 backend:
   name: github
-  repo: Ecdyn/autarkie-finder-blog
+  repo: ecdyn/autarkie-finder-blog
   branch: main
-  site_domain: heartfelt-hamster-babbea.netlify.app
+  auth_endpoint: https://heartfelt-hamster-babbea.netlify.app/.netlify/identity/authorize
 
 media_folder: "images/uploads"
 public_folder: "/images/uploads"
-
 locale: "de"
-
-slug:
-  encoding: "ascii"
-  clean_accents: true
 
 collections:
   - name: "blog"
@@ -21,7 +16,7 @@ collections:
     slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
     fields:
       - { label: "Titel", name: "title", widget: "string" }
-      - { label: "Veröffentlichungsdatum", name: "date", widget: "datetime", format: "YYYY-MM-DD" }
+      - { label: "Datum", name: "date", widget: "datetime", format: "YYYY-MM-DD" }
       - { label: "Autor", name: "author", widget: "string", default: "Autarkie-Finder" }
       - label: "Kategorie"
         name: "category"
@@ -35,6 +30,6 @@ collections:
           - { label: "Technik", value: "technik" }
       - { label: "Beitragsbild", name: "image", widget: "image", required: false }
       - { label: "Beschreibung (SEO)", name: "description", widget: "text" }
-      - { label: "Lesezeit (Minuten)", name: "reading_time", widget: "number", default: 5, min: 1, max: 30 }
+      - { label: "Lesezeit (Minuten)", name: "reading_time", widget: "number", default: 5 }
       - { label: "Empfohlen", name: "featured", widget: "boolean", default: false }
       - { label: "Inhalt", name: "body", widget: "markdown" }
