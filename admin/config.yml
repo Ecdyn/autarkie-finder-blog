@@ -1,0 +1,40 @@
+backend:
+  name: github
+  repo: Ecdyn/autarkie-finder-blog
+  branch: main
+  site_domain: blog.autarkie-finder.com
+
+media_folder: "images/uploads"
+public_folder: "/images/uploads"
+
+locale: "de"
+
+slug:
+  encoding: "ascii"
+  clean_accents: true
+
+collections:
+  - name: "blog"
+    label: "Blog-Beiträge"
+    folder: "_posts"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - { label: "Titel", name: "title", widget: "string" }
+      - { label: "Veröffentlichungsdatum", name: "date", widget: "datetime", format: "YYYY-MM-DD" }
+      - { label: "Autor", name: "author", widget: "string", default: "Autarkie-Finder" }
+      - label: "Kategorie"
+        name: "category"
+        widget: "select"
+        options:
+          - { label: "Energie", value: "energie" }
+          - { label: "Wasser", value: "wasser" }
+          - { label: "Ernaehrung", value: "ernaehrung" }
+          - { label: "Wohnen", value: "wohnen" }
+          - { label: "Off-Grid", value: "offgrid" }
+          - { label: "Technik", value: "technik" }
+      - { label: "Beitragsbild", name: "image", widget: "image", required: false }
+      - { label: "Beschreibung (SEO)", name: "description", widget: "text" }
+      - { label: "Lesezeit (Minuten)", name: "reading_time", widget: "number", default: 5, min: 1, max: 30 }
+      - { label: "Empfohlen", name: "featured", widget: "boolean", default: false }
+      - { label: "Inhalt", name: "body", widget: "markdown" }
