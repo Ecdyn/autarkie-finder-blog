@@ -2,7 +2,7 @@ backend:
   name: github
   repo: ecdyn/autarkie-finder-blog
   branch: main
-  auth_endpoint: https://heartfelt-hamster-babbea.netlify.app/.netlify/identity/authorize
+  site_domain: heartfelt-hamster-babbea.netlify.app
 
 media_folder: "images/uploads"
 public_folder: "/images/uploads"
