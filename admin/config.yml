@@ -2,7 +2,7 @@ backend:
   name: github
   repo: Ecdyn/autarkie-finder-blog
   branch: main
-  site_domain: blog.autarkie-finder.com
+  site_domain: heartfelt-hamster-babbea.netlify.app
 
 media_folder: "images/uploads"
 public_folder: "/images/uploads"
