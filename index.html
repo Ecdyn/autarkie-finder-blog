@@ -92,7 +92,7 @@
 
     a { color: inherit; text-decoration: none; }
 
-    /* ─── Nav ─── */
+    /* Nav */
     nav {
       position: sticky; top: 0; z-index: 100;
       background: var(--bg-nav);
@@ -112,7 +112,6 @@
     .nav-links a { font-size: 0.9rem; color: var(--text-secondary); transition: color var(--transition); }
     .nav-links a:hover, .nav-links a.active { color: var(--accent); }
 
-    /* Toggle */
     .theme-toggle {
       background: var(--toggle-bg); border: 1px solid var(--toggle-border);
       border-radius: 50px; width: 44px; height: 26px; cursor: pointer;
@@ -129,7 +128,6 @@
     .hamburger { display: none; background: none; border: none; cursor: pointer; padding: 0.5rem; }
     .hamburger span { display: block; width: 20px; height: 2px; background: var(--text); margin: 4px 0; border-radius: 1px; }
 
-    /* Mobile Menu */
     .mobile-menu {
       display: none; position: fixed; inset: 0; background: var(--bg);
       z-index: 99; flex-direction: column; align-items: center; justify-content: center; gap: 2rem;
@@ -139,13 +137,13 @@
     .mobile-close { position: absolute; top: 1rem; right: 1.5rem; background: none; border: none; font-size: 1.8rem; color: var(--text); cursor: pointer; }
     .mobile-theme { display: flex; align-items: center; gap: 0.6rem; color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.5rem; }
 
-    /* ─── Hero ─── */
+    /* Hero */
     .hero { max-width: 1100px; margin: 0 auto; padding: 4rem 1.5rem 2rem; }
     .hero-label { display: inline-block; font-size: 0.78rem; font-weight: 600; color: var(--accent); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1rem; }
     .hero h1 { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 700; line-height: 1.2; margin-bottom: 0.75rem; letter-spacing: -0.02em; }
     .hero p { font-size: 1.05rem; color: var(--text-secondary); max-width: 560px; line-height: 1.7; }
 
-    /* ─── Categories ─── */
+    /* Categories */
     .categories { max-width: 1100px; margin: 0 auto; padding: 0.5rem 1.5rem 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; }
     .cat-btn {
       padding: 0.4rem 1rem; border-radius: 50px; border: 1px solid var(--border);
@@ -155,35 +153,37 @@
     .cat-btn:hover { border-color: var(--accent-border); color: var(--accent); }
     .cat-btn.active { background: var(--accent); color: #000; border-color: var(--accent); font-weight: 600; }
 
-    /* ─── Blog Grid ─── */
+    /* Blog Grid */
     .blog-grid {
       max-width: 1100px; margin: 0 auto; padding: 1rem 1.5rem 4rem;
       display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem;
     }
 
-    /* ─── Post Card ─── */
+    /* Post Card */
     .post-card {
       background: var(--bg-card); border: 1px solid var(--border);
       border-radius: var(--radius-lg); overflow: hidden;
       transition: all var(--transition); cursor: pointer;
+      animation: fadeIn 0.4s ease forwards; opacity: 0;
     }
     .post-card:hover { border-color: var(--border-hover); background: var(--bg-card-hover); transform: translateY(-2px); }
-    .post-card:hover .post-image img { transform: scale(1.03); }
-    .post-image { width: 100%; height: 200px; overflow: hidden; position: relative; }
-    .post-image img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
+    .post-badge-wrap { padding: 1.25rem 1.5rem 0; }
     .post-badge {
-      position: absolute; top: 0.75rem; left: 0.75rem; padding: 0.25rem 0.65rem;
+      display: inline-block; padding: 0.25rem 0.65rem;
       border-radius: 6px; font-size: 0.72rem; font-weight: 600; text-transform: uppercase;
       letter-spacing: 0.04em; background: rgba(34, 197, 94, 0.9); color: #000;
     }
-    .post-body { padding: 1.25rem 1.5rem 1.5rem; }
+    .post-body { padding: 0.75rem 1.5rem 1.5rem; }
     .post-meta { display: flex; align-items: center; gap: 1rem; margin-bottom: 0.6rem; font-size: 0.8rem; color: var(--text-muted); }
     .post-card h2 { font-size: 1.15rem; font-weight: 600; line-height: 1.4; margin-bottom: 0.5rem; }
     .post-card .excerpt { color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
     .read-more { display: inline-flex; align-items: center; gap: 0.3rem; margin-top: 1rem; color: var(--accent); font-weight: 600; font-size: 0.85rem; transition: gap var(--transition); }
     .read-more:hover { gap: 0.6rem; }
 
-    /* ─── Newsletter ─── */
+    .loading-posts { text-align: center; padding: 3rem; color: var(--text-muted); grid-column: 1 / -1; }
+    .no-posts { text-align: center; padding: 3rem; color: var(--text-muted); grid-column: 1 / -1; }
+
+    /* Newsletter */
     .newsletter {
       max-width: 600px; margin: 0 auto 4rem; padding: 2.5rem;
       background: var(--bg-card); border: 1px solid var(--border);
@@ -206,7 +206,7 @@
     }
     .newsletter-form button:hover { opacity: 0.9; }
 
-    /* ─── Footer ─── */
+    /* Footer */
     footer { border-top: 1px solid var(--border); padding: 2rem 1.5rem; text-align: center; }
     .footer-inner { max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 0.8rem; }
     .footer-links { display: flex; gap: 1.5rem; list-style: none; }
@@ -214,7 +214,29 @@
     .footer-links a:hover { color: var(--text-secondary); }
     .footer-copy { color: var(--text-muted); font-size: 0.8rem; }
 
-    /* ─── Responsive ─── */
+    /* Post Detail View */
+    .post-detail { display: none; max-width: 800px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+    .post-detail .back-link { display: inline-flex; align-items: center; gap: 0.3rem; color: var(--accent); font-weight: 600; font-size: 0.9rem; margin-bottom: 2rem; cursor: pointer; }
+    .post-detail .back-link:hover { gap: 0.6rem; }
+    .post-detail h1 { font-size: clamp(1.6rem, 3.5vw, 2.4rem); font-weight: 700; line-height: 1.25; margin-bottom: 0.75rem; }
+    .post-detail .detail-meta { display: flex; gap: 1rem; color: var(--text-muted); font-size: 0.85rem; margin-bottom: 2rem; flex-wrap: wrap; }
+    .post-detail .detail-badge { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 5px; font-size: 0.72rem; font-weight: 600; text-transform: uppercase; background: rgba(34,197,94,0.9); color: #000; }
+    .post-detail .content { color: var(--text-secondary); font-size: 1rem; line-height: 1.8; }
+    .post-detail .content h1, .post-detail .content h2, .post-detail .content h3 { color: var(--text); margin: 1.5rem 0 0.75rem; }
+    .post-detail .content h2 { font-size: 1.4rem; }
+    .post-detail .content h3 { font-size: 1.15rem; }
+    .post-detail .content p { margin-bottom: 1rem; }
+    .post-detail .content ul, .post-detail .content ol { margin: 0.5rem 0 1rem 1.5rem; }
+    .post-detail .content li { margin-bottom: 0.3rem; }
+    .post-detail .content code { background: var(--bg-card); padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.9em; }
+    .post-detail .content blockquote { border-left: 3px solid var(--accent); padding-left: 1rem; color: var(--text-muted); margin: 1rem 0; }
+    .post-detail .content table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+    .post-detail .content th, .post-detail .content td { padding: 0.6rem 1rem; border: 1px solid var(--border); text-align: left; }
+    .post-detail .content th { background: var(--bg-card); font-weight: 600; color: var(--text); }
+    .post-detail .content strong { color: var(--text); }
+    .post-detail .content a { color: var(--accent); }
+
+    /* Responsive */
     @media (max-width: 768px) {
       .nav-links, .nav-right .theme-toggle { display: none; }
       .hamburger { display: block; }
@@ -223,16 +245,13 @@
       .categories { padding: 0.5rem 1.2rem 1rem; overflow-x: auto; flex-wrap: nowrap; -webkit-overflow-scrolling: touch; }
       .newsletter { margin: 0 1.2rem 3rem; padding: 2rem 1.2rem; }
       .newsletter-form { flex-direction: column; }
+      .post-detail { padding: 1.5rem 1.2rem 3rem; }
     }
 
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(12px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    .post-card { animation: fadeIn 0.4s ease forwards; opacity: 0; }
-    .post-card:nth-child(1) { animation-delay: 0.05s; }
-    .post-card:nth-child(2) { animation-delay: 0.1s; }
-    .post-card:nth-child(3) { animation-delay: 0.15s; }
   </style>
 </head>
 <body>
@@ -276,48 +295,43 @@
     </div>
   </div>
 
-  <section class="hero">
-    <span class="hero-label">Blog</span>
-    <h1>Wissen für deine Unabhängigkeit</h1>
-    <p>Praxiswissen und Anleitungen rund um Solarenergie, Speicher, Selbstversorgung und autarkes Wohnen.</p>
-  </section>
+  <!-- Blog List View -->
+  <div id="blogView">
+    <section class="hero">
+      <span class="hero-label">Blog</span>
+      <h1>Wissen für deine Unabhängigkeit</h1>
+      <p>Praxiswissen und Anleitungen rund um Solarenergie, Speicher, Selbstversorgung und autarkes Wohnen.</p>
+    </section>
 
-  <div class="categories">
-    <button class="cat-btn active" onclick="filterPosts('alle')">Alle</button>
-    <button class="cat-btn" onclick="filterPosts('energie')">Energie</button>
-    <button class="cat-btn" onclick="filterPosts('wasser')">Wasser</button>
-    <button class="cat-btn" onclick="filterPosts('ernaehrung')">Ernährung</button>
-    <button class="cat-btn" onclick="filterPosts('wohnen')">Wohnen</button>
-    <button class="cat-btn" onclick="filterPosts('offgrid')">Off-Grid</button>
-    <button class="cat-btn" onclick="filterPosts('technik')">Technik</button>
-  </div>
-
-  <div class="blog-grid" id="blogGrid">
-    <article class="post-card" data-category="energie">
-      <div class="post-image">
-        <img src="https://images.unsplash.com/photo-1509391366360-2e959784a276?w=800&q=80" alt="Solaranlage auf Hausdach" loading="lazy">
-        <span class="post-badge">Energie</span>
-      </div>
-      <div class="post-body">
-        <div class="post-meta">
-          <span>20. März 2026</span>
-          <span>8 Min. Lesezeit</span>
-        </div>
-        <h2>Solaranlage mit Speicher: Der komplette Leitfaden für 2026</h2>
-        <p class="excerpt">Alles was du wissen musst, um dein Zuhause mit Solarenergie unabhängig zu machen – von der Planung über Förderungen bis zur Installation.</p>
-        <a href="/blog/solaranlage-speicher-leitfaden-2026" class="read-more">Weiterlesen &rarr;</a>
-      </div>
-    </article>
-  </div>
-
-  <section class="newsletter">
-    <h3>Newsletter</h3>
-    <p>Erhalte die besten Tipps für autarkes Leben direkt in dein Postfach.</p>
-    <div class="newsletter-form">
-      <input type="email" placeholder="deine@email.de" aria-label="E-Mail Adresse">
-      <button type="button">Abonnieren</button>
+    <div class="categories" id="categoryBar">
+      <button class="cat-btn active" onclick="filterPosts('alle')">Alle</button>
+      <button class="cat-btn" onclick="filterPosts('energie')">Energie</button>
+      <button class="cat-btn" onclick="filterPosts('wasser')">Wasser</button>
+      <button class="cat-btn" onclick="filterPosts('ernaehrung')">Ernährung</button>
+      <button class="cat-btn" onclick="filterPosts('wohnen')">Wohnen</button>
+      <button class="cat-btn" onclick="filterPosts('offgrid')">Off-Grid</button>
+      <button class="cat-btn" onclick="filterPosts('technik')">Technik</button>
     </div>
-  </section>
+
+    <div class="blog-grid" id="blogGrid">
+      <div class="loading-posts">Beiträge werden geladen...</div>
+    </div>
+
+    <section class="newsletter">
+      <h3>Newsletter</h3>
+      <p>Erhalte die besten Tipps für autarkes Leben direkt in dein Postfach.</p>
+      <div class="newsletter-form">
+        <input type="email" placeholder="deine@email.de" aria-label="E-Mail Adresse">
+        <button type="button">Abonnieren</button>
+      </div>
+    </section>
+  </div>
+
+  <!-- Post Detail View -->
+  <div class="post-detail" id="postDetail">
+    <a class="back-link" onclick="showBlogList()">&larr; Zurück zum Blog</a>
+    <div id="postDetailContent"></div>
+  </div>
 
   <footer>
     <div class="footer-inner">
@@ -330,6 +344,185 @@
   </footer>
 
   <script>
+    var REPO = 'ecdyn/autarkie-finder-blog';
+    var BRANCH = 'main';
+    var allPosts = [];
+    var currentFilter = 'alle';
+
+    var categoryLabels = {
+      energie: 'Energie', wasser: 'Wasser', ernaehrung: 'Ernährung',
+      wohnen: 'Wohnen', offgrid: 'Off-Grid', technik: 'Technik'
+    };
+
+    var months = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+
+    function formatDate(dateStr) {
+      var d = new Date(dateStr);
+      return d.getDate() + '. ' + months[d.getMonth()] + ' ' + d.getFullYear();
+    }
+
+    function parseFrontmatter(text) {
+      var parts = text.split('---');
+      if (parts.length < 3) return { meta: {}, body: text };
+      var front = parts[1];
+      var body = parts.slice(2).join('---').trim();
+      var meta = {};
+      front.split('\n').forEach(function(line) {
+        var m = line.match(/^(\w+):\s*"?(.+?)"?\s*$/);
+        if (m) meta[m[1]] = m[2];
+      });
+      return { meta: meta, body: body };
+    }
+
+    function markdownToHTML(md) {
+      var html = md;
+      // Headers
+      html = html.replace(/^### (.+)$/gm, '<h3>$1</h3>');
+      html = html.replace(/^## (.+)$/gm, '<h2>$1</h2>');
+      html = html.replace(/^# (.+)$/gm, '<h1>$1</h1>');
+      // Bold & italic
+      html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+      html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
+      // Links
+      html = html.replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2">$1</a>');
+      // Code
+      html = html.replace(/`(.+?)`/g, '<code>$1</code>');
+      // Blockquote
+      html = html.replace(/^> (.+)$/gm, '<blockquote>$1</blockquote>');
+      // Unordered list
+      html = html.replace(/^- (.+)$/gm, '<li>$1</li>');
+      html = html.replace(/(<li>.*<\/li>\n?)+/g, '<ul>$&</ul>');
+      // Ordered list
+      html = html.replace(/^\d+\. (.+)$/gm, '<li>$1</li>');
+      // Tables
+      html = html.replace(/^\|(.+)\|$/gm, function(match, content) {
+        var cells = content.split('|').map(function(c) { return c.trim(); });
+        if (cells.every(function(c) { return /^[-:]+$/.test(c); })) return '';
+        var tag = 'td';
+        var row = cells.map(function(c) { return '<' + tag + '>' + c + '</' + tag + '>'; }).join('');
+        return '<tr>' + row + '</tr>';
+      });
+      html = html.replace(/(<tr>.*<\/tr>\n?)+/g, '<table>$&</table>');
+      // Paragraphs
+      html = html.replace(/^(?!<[hultbao])((?!<).+)$/gm, '<p>$1</p>');
+      // Clean empty lines
+      html = html.replace(/<p><\/p>/g, '');
+      // HR
+      html = html.replace(/^---$/gm, '<hr>');
+      return html;
+    }
+
+    async function loadPosts() {
+      var grid = document.getElementById('blogGrid');
+      try {
+        var res = await fetch('https://api.github.com/repos/' + REPO + '/contents/_posts?ref=' + BRANCH);
+        if (res.status === 404) {
+          grid.innerHTML = '<div class="no-posts">Noch keine Beiträge vorhanden.</div>';
+          return;
+        }
+        var files = await res.json();
+        if (!Array.isArray(files) || !files.length) {
+          grid.innerHTML = '<div class="no-posts">Noch keine Beiträge vorhanden.</div>';
+          return;
+        }
+
+        // Load each post content
+        var posts = [];
+        for (var i = 0; i < files.length; i++) {
+          var f = files[i];
+          if (!f.name.endsWith('.md')) continue;
+          var contentRes = await fetch('https://api.github.com/repos/' + REPO + '/contents/' + f.path + '?ref=' + BRANCH);
+          var contentData = await contentRes.json();
+          var decoded = decodeURIComponent(escape(atob(contentData.content.replace(/\n/g, ''))));
+          var parsed = parseFrontmatter(decoded);
+          posts.push({
+            filename: f.name,
+            path: f.path,
+            title: parsed.meta.title || f.name.replace(/^\d{4}-\d{2}-\d{2}-/, '').replace('.md', '').replace(/-/g, ' '),
+            date: parsed.meta.date || f.name.substring(0, 10),
+            category: parsed.meta.category || 'energie',
+            description: parsed.meta.description || '',
+            reading_time: parsed.meta.reading_time || '5',
+            body: parsed.body
+          });
+        }
+
+        // Sort newest first
+        posts.sort(function(a, b) { return b.date.localeCompare(a.date); });
+        allPosts = posts;
+        renderPosts(posts);
+
+      } catch (e) {
+        grid.innerHTML = '<div class="no-posts">Fehler beim Laden der Beiträge.</div>';
+        console.error(e);
+      }
+    }
+
+    function renderPosts(posts) {
+      var grid = document.getElementById('blogGrid');
+
+      if (!posts.length) {
+        grid.innerHTML = '<div class="no-posts">Keine Beiträge in dieser Kategorie.</div>';
+        return;
+      }
+
+      grid.innerHTML = '';
+      posts.forEach(function(post, i) {
+        var catLabel = categoryLabels[post.category] || post.category;
+        var card = document.createElement('article');
+        card.className = 'post-card';
+        card.setAttribute('data-category', post.category);
+        card.style.animationDelay = (i * 0.05) + 's';
+        card.innerHTML =
+          '<div class="post-badge-wrap"><span class="post-badge">' + catLabel + '</span></div>' +
+          '<div class="post-body">' +
+            '<div class="post-meta">' +
+              '<span>' + formatDate(post.date) + '</span>' +
+              '<span>' + post.reading_time + ' Min. Lesezeit</span>' +
+            '</div>' +
+            '<h2>' + post.title + '</h2>' +
+            '<p class="excerpt">' + (post.description || post.body.substring(0, 160) + '...') + '</p>' +
+            '<span class="read-more">Weiterlesen &rarr;</span>' +
+          '</div>';
+        card.onclick = function() { showPost(post); };
+        grid.appendChild(card);
+      });
+    }
+
+    function filterPosts(category) {
+      currentFilter = category;
+      document.querySelectorAll('.cat-btn').forEach(function(b) { b.classList.remove('active'); });
+      event.target.classList.add('active');
+      if (category === 'alle') {
+        renderPosts(allPosts);
+      } else {
+        renderPosts(allPosts.filter(function(p) { return p.category === category; }));
+      }
+    }
+
+    function showPost(post) {
+      var catLabel = categoryLabels[post.category] || post.category;
+      document.getElementById('blogView').style.display = 'none';
+      document.getElementById('postDetail').style.display = 'block';
+      document.getElementById('postDetailContent').innerHTML =
+        '<h1>' + post.title + '</h1>' +
+        '<div class="detail-meta">' +
+          '<span class="detail-badge">' + catLabel + '</span>' +
+          '<span>' + formatDate(post.date) + '</span>' +
+          '<span>' + post.reading_time + ' Min. Lesezeit</span>' +
+          '<span>Von ' + 'Autarkie-Finder' + '</span>' +
+        '</div>' +
+        '<div class="content">' + markdownToHTML(post.body) + '</div>';
+      window.scrollTo(0, 0);
+    }
+
+    function showBlogList() {
+      document.getElementById('postDetail').style.display = 'none';
+      document.getElementById('blogView').style.display = 'block';
+      window.scrollTo(0, 0);
+    }
+
+    // Theme
     function toggleTheme() {
       var c = document.documentElement.getAttribute('data-theme');
       var n = c === 'dark' ? 'light' : 'dark';
@@ -343,22 +536,13 @@
       if (l) l.textContent = document.documentElement.getAttribute('data-theme') === 'dark' ? 'Heller Modus' : 'Dunkler Modus';
     })();
 
-    function filterPosts(category) {
-      document.querySelectorAll('.cat-btn').forEach(function(b) { b.classList.remove('active'); });
-      event.target.classList.add('active');
-      document.querySelectorAll('.post-card').forEach(function(c) {
-        if (category === 'alle' || c.dataset.category === category) {
-          c.style.display = '';
-          c.style.animation = 'fadeIn 0.3s ease forwards';
-        } else {
-          c.style.display = 'none';
-        }
-      });
-    }
-
+    // Mobile menu
     function toggleMenu() {
       document.getElementById('mobileMenu').classList.toggle('open');
     }
+
+    // Load posts on page load
+    loadPosts();
   </script>
 
 </body>
