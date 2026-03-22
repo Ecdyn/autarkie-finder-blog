@@ -1,11 +1,11 @@
 ---
-title: "Solaranlage mit Speicher: Der komplette Leitfaden für 2026"
-date: 2026-03-20
+title: "Solaranlage mit Speicher:"
+date: 2026-03-22
 author: Autarkie-Finder
 category: energie
 description: "Alles was du wissen musst, um dein Zuhause mit Solarenergie unabhängig zu machen."
 reading_time: 8
-featured: true
+featured: false
 ---
 
 # Solaranlage mit Speicher: Der komplette Leitfaden für 2026
