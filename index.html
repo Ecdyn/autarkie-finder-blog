@@ -10,8 +10,8 @@
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://blog.autarkie-finder.com">
   <link rel="icon" href="/favicon.ico" sizes="any">
-<link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
   <!-- Security -->
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
@@ -123,6 +123,17 @@
     .rate-limit-info{text-align:center;padding:2rem;color:var(--text-muted);grid-column:1/-1;font-size:.88rem;}
     .rate-limit-info a{color:var(--accent);}
 
+    /* SEO Content */
+    .seo-content{max-width:1100px;margin:0 auto;padding:2rem 1.5rem 3rem;}
+    .seo-content h2{font-size:1.3rem;font-weight:700;margin-bottom:.8rem;color:var(--text);}
+    .seo-content h3{font-size:1.05rem;font-weight:600;margin:1.5rem 0 .6rem;color:var(--text);}
+    .seo-content p{color:var(--text-sec);font-size:.92rem;line-height:1.7;margin-bottom:.8rem;}
+    .seo-content a{color:var(--accent);}
+    .seo-content strong{color:var(--text);}
+    .seo-links ul{list-style:none;display:flex;flex-direction:column;gap:.4rem;}
+    .seo-links a{color:var(--accent);font-size:.9rem;font-weight:500;transition:opacity .2s;}
+    .seo-links a:hover{opacity:.8;}
+
     /* Footer */
     footer{border-top:1px solid var(--border);padding:1.5rem;text-align:center;}
     .footer-inner{max-width:1100px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:.6rem;}
@@ -223,6 +234,30 @@
     <div class="blog-grid" id="blogGrid">
       <div class="loading-posts">Beiträge werden geladen...</div>
     </div>
+
+    <!-- Static SEO Content - visible to Google -->
+    <section class="seo-content">
+      <h2>Autarkie-Finder Blog: Dein Ratgeber für ein unabhängiges Leben</h2>
+      <p>Der Autarkie-Finder Blog bietet dir fundiertes Praxiswissen rund um die Themen Solarenergie, Stromspeicher, Wärmepumpen, Regenwassernutzung und Selbstversorgung. Unser Ziel: Dir helfen, Schritt für Schritt unabhängiger von steigenden Energiepreisen und externen Versorgern zu werden.</p>
+      <p>Ob du ein <strong>Balkonkraftwerk</strong> installieren möchtest, die passende <strong>Photovoltaikanlage mit Speicher</strong> suchst oder dich über aktuelle <strong>Förderungen und Gesetze 2026</strong> informieren willst – hier findest du Anleitungen, Vergleiche und Tipps, die auf aktuellen Daten und Quellen basieren.</p>
+      <h3>Unsere Themen im Überblick</h3>
+      <p>Im Bereich <strong>Energie</strong> erfährst du alles über Solaranlagen, Balkonkraftwerke, Einspeisevergütung und wie du deinen Eigenverbrauch optimierst. Unter <strong>Technik</strong> vergleichen wir Batteriespeicher, Wallboxen und smarte Energiemanagement-Systeme. Der Bereich <strong>Wasser</strong> zeigt dir, wie du mit Regenwassernutzung und Wasserfiltern deinen Trinkwasserverbrauch senkst. Beim Thema <strong>Wohnen</strong> geht es um Wärmepumpen, Dämmung, Energieausweise und nachhaltige Haustechnik. Unter <strong>Ernährung</strong> begleiten wir dich auf dem Weg zum eigenen Gemüsegarten und zur Selbstversorgung. Und im Bereich <strong>Off-Grid</strong> findest du Tipps zu Stromkosten senken, Blackout-Vorsorge und dynamischen Stromtarifen.</p>
+      <p>Berechne deinen persönlichen Autarkiegrad mit unserem kostenlosen <a href="https://autarkie-finder.com/rechner">Autarkie-Rechner</a> und finde mit dem <a href="https://autarkie-finder.com/vergleich">Stromanbieter-Vergleich</a> den günstigsten Tarif für deinen Reststrombedarf.</p>
+      <h3>Aktuelle Beiträge</h3>
+      <nav class="seo-links" aria-label="Blog-Beiträge">
+        <ul>
+          <li><a href="/balkonkraftwerk-gesetz-2026-neue-regeln/">Balkonkraftwerk Gesetz 2026: Was sich für dich ändert</a></li>
+          <li><a href="/stromspeicher-test-2026-die-besten-heimspeicher-im-vergleich/">Stromspeicher Test 2026: Die besten Heimspeicher im Vergleich</a></li>
+          <li><a href="/waermepumpe-2026-bis-zu-70-foerderung-sichern-so-gehts/">Wärmepumpe 2026: Bis zu 70% Förderung sichern</a></li>
+          <li><a href="/einspeiseverguetung-2026-jetzt-noch-20-jahre-foerderung-sichern/">Einspeisevergütung 2026: Jetzt noch 20 Jahre Förderung sichern</a></li>
+          <li><a href="/regenwasser-nutzen-so-sparst-du-bis-zu-50-trinkwasser-im-haushalt/">Regenwasser nutzen: So sparst du bis zu 50% Trinkwasser</a></li>
+          <li><a href="/selbstversorgung-starten-gemuesegarten-anlegen-fuer-anfaenger/">Selbstversorgung starten: Gemüsegarten anlegen für Anfänger</a></li>
+          <li><a href="/stromkosten-senken-5-sofort-tipps-die-zusammen-ueber-500-euro-sparen/">Stromkosten senken: 5 Sofort-Tipps die über 500 Euro sparen</a></li>
+          <li><a href="/fruehlingscheck-fuer-deine-solaranlage-5-schritte-fuer-mehr-ertrag/">Frühlingscheck für deine Solaranlage: 5 Schritte für mehr Ertrag</a></li>
+          <li><a href="/blackout-vorsorge-so-bist-du-bei-einem-stromausfall-vorbereitet/">Blackout-Vorsorge: So bist du bei Stromausfall vorbereitet</a></li>
+        </ul>
+      </nav>
+    </section>
   </div>
 
   <div class="post-detail" id="postDetail">
