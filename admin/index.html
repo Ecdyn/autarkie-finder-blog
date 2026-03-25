@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex, nofollow">
   <title>Autarkie-Finder CMS</title>
+  <link rel="icon" href="/favicon.ico" sizes="any">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #0a0a0a; color: #e5e5e5; min-height: 100vh; }
@@ -119,7 +120,7 @@
             <div class="field"><label>Kategorie</label><select id="postCategory"><option value="energie">Energie</option><option value="wasser">Wasser</option><option value="ernaehrung">Ernährung</option><option value="wohnen">Wohnen</option><option value="offgrid">Off-Grid</option><option value="technik">Technik</option></select></div>
             <div class="field"><label>Lesezeit (Minuten)</label><input type="number" id="postTime" value="5" min="1" max="60"></div>
           </div>
-          <div class="field"><label>Inhalt <span class="hint">(Markdown-Format)</span></label><textarea id="postContent" placeholder="# Überschrift&#10;&#10;Dein Text...&#10;&#10;## Unterüberschrift"></textarea></div>
+          <div class="field"><label>Inhalt <span class="hint">(Markdown-Format)</span></label><textarea id="postContent" placeholder="# Überschrift&#10;&#10;Dein Text..."></textarea></div>
         </div>
         <div class="editor-section">
           <div class="editor-section-title">Veröffentlichung</div>
@@ -170,7 +171,6 @@
     function logout(){TOKEN='';localStorage.removeItem('gh_token');document.getElementById('cmsView').style.display='none';document.getElementById('loginView').style.display='flex';}
     function showCMS(){document.getElementById('loginView').style.display='none';document.getElementById('cmsView').style.display='block';loadPosts();}
     function showList(){document.getElementById('editor').style.display='none';document.getElementById('postList').style.display='block';editingPath=null;editingSha=null;loadPosts();}
-
     function showStatus(msg,type){var el=document.getElementById('statusMsg');el.textContent=msg;el.className='status '+type;if(type!=='info')setTimeout(function(){el.className='status';},5000);}
     function showProgress(msg){var el=document.getElementById('progressMsg');el.textContent=msg;el.style.display=msg?'block':'none';}
     function updateCharCount(id,cid,max){var l=document.getElementById(id).value.length;var e=document.getElementById(cid);e.textContent=l+' / '+max;e.style.color=l>max?'#ef4444':l>max*0.75?'#eab308':'#555';}
@@ -183,8 +183,9 @@
       else if(s==='draft'){f.style.display='none';b.textContent='Als Entwurf speichern';}
       else{f.style.display='none';b.textContent='Veröffentlichen';}
     }
-    function updateScheduleInfo(){var d=document.getElementById('postDate').value,t=document.getElementById('postTimeSchedule').value,i=document.getElementById('scheduleInfo');if(d&&t){var x=new Date(d+'T'+t),n=new Date(),df=x-n;if(df<=0){i.innerHTML='⚠️ Liegt in der Vergangenheit – wird sofort veröffentlicht.';i.style.color='#eab308';}else{var h=Math.floor(df/3600000),dy=Math.floor(h/24),r=h%24;i.innerHTML='📅 Wird veröffentlicht in '+(dy>0?dy+' Tag'+(dy>1?'e':'')+' und '+r+' Std.':h+' Stunden');i.style.color='#22c55e';}}}
+    function updateScheduleInfo(){var d=document.getElementById('postDate').value,t=document.getElementById('postTimeSchedule').value,i=document.getElementById('scheduleInfo');if(d&&t){var x=new Date(d+'T'+t),n=new Date(),df=x-n;if(df<=0){i.innerHTML='⚠️ Liegt in der Vergangenheit.';i.style.color='#eab308';}else{var h=Math.floor(df/3600000),dy=Math.floor(h/24),r=h%24;i.innerHTML='📅 In '+(dy>0?dy+' Tag'+(dy>1?'e':'')+' und '+r+' Std.':h+' Stunden');i.style.color='#22c55e';}}}
 
+    // ─── GitHub API helper ───
     async function ghAPI(path,options){
       var url='https://api.github.com/repos/'+REPO+path;
       var headers={'Authorization':'token '+TOKEN,'Accept':'application/vnd.github.v3+json'};
@@ -194,7 +195,20 @@
       return res;
     }
 
-    // ─── Markdown to HTML converter ───
+    // ─── Parse frontmatter from markdown ───
+    function parseFM(txt){
+      var p=txt.split('---');if(p.length<3)return{m:{},b:txt};
+      var f=p[1],b=p.slice(2).join('---').trim(),m={};
+      f.split('\n').forEach(function(l){var x=l.match(/^(\w+):\s*"?(.+?)"?\s*$/);if(x)m[x[1]]=x[2];});
+      return{m:m,b:b};
+    }
+
+    // ─── Decode base64 GitHub content ───
+    function decodeContent(base64){
+      return decodeURIComponent(escape(atob(base64.replace(/\n/g,''))));
+    }
+
+    // ─── Markdown to HTML ───
     function md2html(s){
       var h=s;
       h=h.replace(/^### (.+)$/gm,'<h3>$1</h3>');
@@ -217,51 +231,99 @@
       return h;
     }
 
-    // ─── Generate static HTML page for a post ───
-    function generateArticleHTML(meta, bodyHTML, slug){
+    // ═══════════════════════════════════════════════
+    // NEUE ZENTRALE FUNKTION: posts.json aktualisieren
+    // ═══════════════════════════════════════════════
+    async function updatePostsJson(){
+      try{
+        // 1. Alle Dateien in _posts/ laden
+        var res=await ghAPI('/contents/_posts?ref='+BRANCH);
+        if(!res.ok) return;
+        var files=await res.json();
+        if(!Array.isArray(files)) return;
+
+        var posts=[];
+
+        // 2. Jede Markdown-Datei lesen und Metadaten extrahieren
+        for(var i=0;i<files.length;i++){
+          var f=files[i];
+          if(!f.name.endsWith('.md')) continue;
+
+          var cr=await ghAPI('/contents/'+f.path+'?ref='+BRANCH);
+          if(!cr.ok) continue;
+          var cd=await cr.json();
+          var decoded=decodeContent(cd.content);
+          var parsed=parseFM(decoded);
+          var m=parsed.m;
+
+          // Nur veröffentlichte Posts aufnehmen
+          var status=m.status||'publish';
+          if(status==='draft') continue;
+          if(status==='scheduled'){
+            var pd=m.publish_date||'',pt=m.publish_time||'08:00';
+            if(pd && new Date(pd+'T'+pt)>new Date()) continue;
+          }
+
+          var slug=f.name.replace(/^\d{4}-\d{2}-\d{2}-/,'').replace('.md','');
+
+          posts.push({
+            title: m.title||slug.replace(/-/g,' '),
+            slug: slug,
+            url: SITE+'/'+slug+'/',
+            date: m.date||f.name.substring(0,10),
+            author: m.author||'Autarkie-Finder',
+            category: m.category||'energie',
+            description: m.description||'',
+            reading_time: m.reading_time||'5',
+            image: m.image||'',
+            image_alt: m.image_alt||'',
+            keywords: m.keywords||''
+          });
+        }
+
+        // 3. Nach Datum sortieren (neueste zuerst)
+        posts.sort(function(a,b){return b.date.localeCompare(a.date);});
+
+        // 4. JSON erzeugen und auf GitHub schreiben
+        var json=JSON.stringify(posts,null,2);
+        var encoded=btoa(unescape(encodeURIComponent(json)));
+
+        var existing=await ghAPI('/contents/posts.json?ref='+BRANCH);
+        var payload={message:'posts.json aktualisiert',content:encoded,branch:BRANCH};
+        if(existing.ok){
+          var ed=await existing.json();
+          payload.sha=ed.sha;
+        }
+
+        await ghAPI('/contents/posts.json',{method:'PUT',body:JSON.stringify(payload)});
+      }catch(e){
+        console.error('posts.json update failed:',e);
+      }
+    }
+
+    // ═══════════════════════════════════════════════
+    // Statische Artikelseite generieren
+    // ═══════════════════════════════════════════════
+    function generateArticleHTML(meta,bodyHTML,slug){
       var catLabel=categoryLabels[meta.category]||meta.category;
       var months=['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
-      var d=new Date(meta.date);
-      var dateStr=d.getDate()+'. '+months[d.getMonth()]+' '+d.getFullYear();
+      var d=new Date(meta.date);var dateStr=d.getDate()+'. '+months[d.getMonth()]+' '+d.getFullYear();
       var imgTag=meta.image?'<img class="hero-img" src="'+meta.image+'" alt="'+(meta.image_alt||meta.title)+'" loading="lazy">':'';
       var url=SITE+'/'+slug+'/';
-
-      return '<!DOCTYPE html>\n'+
-'<html lang="de">\n<head>\n'+
-'  <meta charset="UTF-8">\n'+
-'  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n'+
+      return '<!DOCTYPE html>\n<html lang="de">\n<head>\n'+
+'  <meta charset="UTF-8">\n  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n'+
 '  <title>'+meta.title+' – Autarkie-Finder Blog</title>\n'+
 '  <meta name="description" content="'+meta.description+'">\n'+
 '  <meta name="keywords" content="'+(meta.keywords||'')+'">\n'+
-'  <meta name="author" content="Autarkie-Finder">\n'+
-'  <meta name="robots" content="index, follow">\n'+
+'  <meta name="author" content="Autarkie-Finder">\n  <meta name="robots" content="index, follow">\n'+
 '  <link rel="canonical" href="'+url+'">\n'+
-'  <meta http-equiv="X-Content-Type-Options" content="nosniff">\n'+
-'  <meta http-equiv="X-Frame-Options" content="DENY">\n'+
+'  <link rel="icon" href="/favicon.ico" sizes="any">\n  <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">\n  <link rel="apple-touch-icon" href="/apple-touch-icon.png">\n'+
 '  <meta name="referrer" content="strict-origin-when-cross-origin">\n'+
-'  <meta property="og:title" content="'+meta.title+'">\n'+
-'  <meta property="og:description" content="'+meta.description+'">\n'+
-'  <meta property="og:type" content="article">\n'+
-'  <meta property="og:url" content="'+url+'">\n'+
+'  <meta property="og:title" content="'+meta.title+'">\n  <meta property="og:description" content="'+meta.description+'">\n  <meta property="og:type" content="article">\n  <meta property="og:url" content="'+url+'">\n'+
 (meta.image?'  <meta property="og:image" content="'+meta.image+'">\n':'')+
-'  <meta property="og:locale" content="de_DE">\n'+
-'  <meta property="og:site_name" content="Autarkie-Finder">\n'+
-'  <meta name="twitter:card" content="summary_large_image">\n'+
-'  <meta name="twitter:title" content="'+meta.title+'">\n'+
-'  <meta name="twitter:description" content="'+meta.description+'">\n'+
-'  <script type="application/ld+json">\n'+
-'  {\n'+
-'    "@context": "https://schema.org",\n'+
-'    "@type": "Article",\n'+
-'    "headline": "'+meta.title.replace(/"/g,'\\"')+'",\n'+
-'    "description": "'+meta.description.replace(/"/g,'\\"')+'",\n'+
-'    "datePublished": "'+meta.date+'",\n'+
-'    "author": {"@type":"Person","name":"Autarkie-Finder"},\n'+
-'    "publisher": {"@type":"Organization","name":"Autarkie-Finder","url":"https://autarkie-finder.com"},\n'+
-'    "mainEntityOfPage": "'+url+'"\n'+
-(meta.image?'    ,"image": "'+meta.image+'"\n':'')+
-'  }\n'+
-'  <\/script>\n'+
+'  <meta property="og:locale" content="de_DE">\n  <meta property="og:site_name" content="Autarkie-Finder">\n'+
+'  <meta name="twitter:card" content="summary_large_image">\n  <meta name="twitter:title" content="'+meta.title+'">\n  <meta name="twitter:description" content="'+meta.description+'">\n'+
+'  <script type="application/ld+json">\n  {"@context":"https://schema.org","@type":"Article","headline":"'+meta.title.replace(/"/g,'\\"')+'","description":"'+meta.description.replace(/"/g,'\\"')+'","datePublished":"'+meta.date+'","author":{"@type":"Person","name":"Autarkie-Finder"},"publisher":{"@type":"Organization","name":"Autarkie-Finder","url":"https://autarkie-finder.com"},"mainEntityOfPage":"'+url+'"'+(meta.image?',"image":"'+meta.image+'"':'')+'}\n  <\/script>\n'+
 '  <script>(function(){var s=localStorage.getItem("theme");if(!s)s=window.matchMedia("(prefers-color-scheme:light)").matches?"light":"dark";document.documentElement.setAttribute("data-theme",s);})();<\/script>\n'+
 '  <style>\n'+
 '    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}\n'+
@@ -281,153 +343,65 @@
 '    [data-theme="light"] .toggle-dot{transform:translateX(16px);}\n'+
 '    .article{max-width:760px;margin:0 auto;padding:2rem 1.5rem 4rem;}\n'+
 '    .back-link{display:inline-flex;align-items:center;gap:.3rem;color:var(--accent);font-weight:600;font-size:.88rem;margin-bottom:1.5rem;}\n'+
-'    .back-link:hover{gap:.5rem;}\n'+
 '    .hero-img{width:100%;max-height:400px;object-fit:cover;border-radius:16px;margin-bottom:1.5rem;}\n'+
 '    .article h1{font-size:clamp(1.5rem,3.5vw,2.2rem);font-weight:700;line-height:1.25;margin-bottom:.6rem;}\n'+
 '    .detail-meta{display:flex;gap:.8rem;color:var(--text-muted);font-size:.82rem;margin-bottom:2rem;flex-wrap:wrap;align-items:center;}\n'+
 '    .badge{display:inline-block;padding:.15rem .5rem;border-radius:5px;font-size:.7rem;font-weight:600;text-transform:uppercase;background:rgba(34,197,94,0.9);color:#000;}\n'+
 '    .content{color:var(--text-sec);font-size:1rem;line-height:1.8;}\n'+
 '    .content h1,.content h2,.content h3{color:var(--text);margin:1.5rem 0 .6rem;}\n'+
-'    .content h1{font-size:1.6rem;} .content h2{font-size:1.3rem;} .content h3{font-size:1.1rem;}\n'+
+'    .content h1{font-size:1.6rem;}.content h2{font-size:1.3rem;}.content h3{font-size:1.1rem;}\n'+
 '    .content p{margin-bottom:1rem;}\n'+
-'    .content ul,.content ol{margin:.5rem 0 1rem 1.5rem;}\n'+
-'    .content li{margin-bottom:.3rem;}\n'+
+'    .content ul,.content ol{margin:.5rem 0 1rem 1.5rem;}.content li{margin-bottom:.3rem;}\n'+
 '    .content code{background:var(--bg-card);padding:.1rem .35rem;border-radius:4px;font-size:.9em;}\n'+
 '    .content blockquote{border-left:3px solid var(--accent);padding-left:1rem;color:var(--text-muted);margin:1rem 0;}\n'+
 '    .content table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.92rem;}\n'+
 '    .content th,.content td{padding:.5rem .8rem;border:1px solid var(--border);text-align:left;}\n'+
 '    .content th{background:var(--bg-card);font-weight:600;color:var(--text);}\n'+
-'    .content strong{color:var(--text);}\n'+
-'    .content a{color:var(--accent);}\n'+
+'    .content strong{color:var(--text);}.content a{color:var(--accent);}\n'+
 '    .content img{max-width:100%;border-radius:8px;margin:1rem 0;}\n'+
 '    .content hr{border:none;border-top:1px solid var(--border);margin:2rem 0;}\n'+
 '    footer{border-top:1px solid var(--border);padding:1.5rem;text-align:center;}\n'+
 '    .footer-inner{max-width:1100px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:.6rem;}\n'+
-'    .footer-links{display:flex;gap:1.5rem;list-style:none;}\n'+
-'    .footer-links a{color:var(--text-muted);font-size:.82rem;}\n'+
+'    .footer-links{display:flex;gap:1.5rem;list-style:none;}.footer-links a{color:var(--text-muted);font-size:.82rem;}\n'+
 '    .footer-copy{color:var(--text-muted);font-size:.78rem;}\n'+
 '    @media(max-width:768px){.nav-links{display:none;}.article{padding:1.5rem 1rem 3rem;}}\n'+
-'  </style>\n'+
-'</head>\n<body>\n'+
-'  <nav><div class="nav-inner">\n'+
-'    <a href="https://autarkie-finder.com" class="logo"><div class="logo-dot"></div>Autarkie-Finder</a>\n'+
-'    <ul class="nav-links">\n'+
-'      <li><a href="https://autarkie-finder.com">Start</a></li>\n'+
-'      <li><a href="https://autarkie-finder.com/rechner">Rechner</a></li>\n'+
-'      <li><a href="https://autarkie-finder.com/vergleich">Vergleich</a></li>\n'+
-'      <li><a href="/">Blog</a></li>\n'+
-'      <li><a href="https://autarkie-finder.com/faq">FAQ</a></li>\n'+
-'    </ul>\n'+
+'  </style>\n</head>\n<body>\n'+
+'  <nav><div class="nav-inner">\n    <a href="https://autarkie-finder.com" class="logo"><div class="logo-dot"></div>Autarkie-Finder</a>\n'+
+'    <ul class="nav-links"><li><a href="https://autarkie-finder.com">Start</a></li><li><a href="https://autarkie-finder.com/rechner">Rechner</a></li><li><a href="https://autarkie-finder.com/vergleich">Vergleich</a></li><li><a href="/">Blog</a></li><li><a href="https://autarkie-finder.com/faq">FAQ</a></li></ul>\n'+
 '    <button class="theme-toggle" onclick="var c=document.documentElement.getAttribute(\'data-theme\'),n=c===\'dark\'?\'light\':\'dark\';document.documentElement.setAttribute(\'data-theme\',n);localStorage.setItem(\'theme\',n);" aria-label="Theme"><div class="toggle-dot"></div></button>\n'+
-'  </div></nav>\n\n'+
-'  <article class="article">\n'+
-'    <a href="/" class="back-link">&larr; Zurück zum Blog</a>\n'+
-imgTag+'\n'+
-'    <h1>'+meta.title+'</h1>\n'+
-'    <div class="detail-meta">\n'+
-'      <span class="badge">'+catLabel+'</span>\n'+
-'      <span>'+dateStr+'</span>\n'+
-'      <span>'+(meta.reading_time||'5')+' Min. Lesezeit</span>\n'+
-'      <span>Von Autarkie-Finder</span>\n'+
-'    </div>\n'+
-'    <div class="content">\n'+bodyHTML+'\n    </div>\n'+
-'  </article>\n\n'+
-'  <footer><div class="footer-inner">\n'+
-'    <ul class="footer-links"><li><a href="https://autarkie-finder.com/impressum">Impressum</a></li><li><a href="https://autarkie-finder.com/datenschutz">Datenschutz</a></li></ul>\n'+
-'    <p class="footer-copy">&copy; 2026 Autarkie-Finder</p>\n'+
-'  </div></footer>\n'+
+'  </div></nav>\n\n  <article class="article">\n    <a href="/" class="back-link">&larr; Zurück zum Blog</a>\n'+
+imgTag+'\n    <h1>'+meta.title+'</h1>\n'+
+'    <div class="detail-meta"><span class="badge">'+catLabel+'</span><span>'+dateStr+'</span><span>'+(meta.reading_time||'5')+' Min. Lesezeit</span><span>Von Autarkie-Finder</span></div>\n'+
+'    <div class="content">\n'+bodyHTML+'\n    </div>\n  </article>\n\n'+
+'  <footer><div class="footer-inner"><ul class="footer-links"><li><a href="https://autarkie-finder.com/impressum">Impressum</a></li><li><a href="https://autarkie-finder.com/datenschutz">Datenschutz</a></li></ul><p class="footer-copy">&copy; 2026 Autarkie-Finder</p></div></footer>\n'+
 '</body>\n</html>';
     }
 
-    // ─── Create/update static HTML page on GitHub ───
-    async function publishStaticPage(meta, body, slug){
-      var bodyHTML = md2html(body);
-      var html = generateArticleHTML(meta, bodyHTML, slug);
-      var encoded = btoa(unescape(encodeURIComponent(html)));
-      var path = slug + '/index.html';
-
-      // Check if page already exists (to get sha for update)
-      var existing = await ghAPI('/contents/' + path + '?ref=' + BRANCH);
-      var payload = { message: 'Seite: ' + meta.title, content: encoded, branch: BRANCH };
-      if(existing.ok){
-        var data = await existing.json();
-        payload.sha = data.sha;
-      }
-
-      var res = await ghAPI('/contents/' + path, { method: 'PUT', body: JSON.stringify(payload) });
+    // ─── Publish static article page ───
+    async function publishStaticPage(meta,body,slug){
+      var bodyHTML=md2html(body);
+      var html=generateArticleHTML(meta,bodyHTML,slug);
+      var encoded=btoa(unescape(encodeURIComponent(html)));
+      var path=slug+'/index.html';
+      var existing=await ghAPI('/contents/'+path+'?ref='+BRANCH);
+      var payload={message:'Seite: '+meta.title,content:encoded,branch:BRANCH};
+      if(existing.ok){var data=await existing.json();payload.sha=data.sha;}
+      var res=await ghAPI('/contents/'+path,{method:'PUT',body:JSON.stringify(payload)});
       return res.ok;
     }
 
-    // ─── Delete static HTML page ───
+    // ─── Delete static article page ───
     async function deleteStaticPage(slug){
-      var path = slug + '/index.html';
-      var res = await ghAPI('/contents/' + path + '?ref=' + BRANCH);
-      if(res.ok){
-        var data = await res.json();
-        await ghAPI('/contents/' + path, { method: 'DELETE', body: JSON.stringify({ message: 'Seite gelöscht: ' + slug, sha: data.sha, branch: BRANCH }) });
-      }
+      var path=slug+'/index.html';
+      var res=await ghAPI('/contents/'+path+'?ref='+BRANCH);
+      if(res.ok){var data=await res.json();await ghAPI('/contents/'+path,{method:'DELETE',body:JSON.stringify({message:'Seite gelöscht: '+slug,sha:data.sha,branch:BRANCH})});}
     }
 
-    // ─── Parse frontmatter ───
-    function parseFM(txt){
-      var p=txt.split('---');if(p.length<3)return{m:{},b:txt};
-      var f=p[1],b=p.slice(2).join('---').trim(),m={};
-      f.split('\n').forEach(function(l){var x=l.match(/^(\w+):\s*"?(.+?)"?\s*$/);if(x)m[x[1]]=x[2];});
-      return{m:m,b:b};
-    }
-
-    // ─── Regenerate ALL static pages ───
-    async function regenerateAll(){
-      if(!confirm('Alle statischen Seiten neu generieren? Das kann einen Moment dauern.')) return;
-      showStatus('Regenerierung gestartet...','info');
-      try{
-        var res = await ghAPI('/contents/_posts?ref=' + BRANCH);
-        if(!res.ok){showStatus('Keine Posts gefunden.','error');return;}
-        var files = await res.json();
-        if(!Array.isArray(files)){showStatus('Fehler beim Laden.','error');return;}
-
-        var count = 0, total = files.filter(function(f){return f.name.endsWith('.md');}).length;
-
-        for(var i=0;i<files.length;i++){
-          var f=files[i];
-          if(!f.name.endsWith('.md')) continue;
-          showProgress('Regeneriere ' + (count+1) + ' von ' + total + '...');
-
-          var cr = await ghAPI('/contents/' + f.path + '?ref=' + BRANCH);
-          var cd = await cr.json();
-          var dec = decodeURIComponent(escape(atob(cd.content.replace(/\n/g,''))));
-          var parsed = parseFM(dec);
-          var meta = parsed.m;
-          var slug = f.name.replace(/^\d{4}-\d{2}-\d{2}-/,'').replace('.md','');
-
-          // Skip drafts
-          if(meta.status === 'draft') continue;
-          // Skip future scheduled
-          if(meta.status === 'scheduled'){
-            var pd=meta.publish_date||'',pt=meta.publish_time||'08:00';
-            if(pd && new Date(pd+'T'+pt) > new Date()) continue;
-          }
-
-          await publishStaticPage(meta, parsed.b, slug);
-          count++;
-        }
-
-        // Update sitemap
-        await updateSitemap();
-        showProgress('');
-        showStatus('Fertig! ' + count + ' Seiten regeneriert + Sitemap aktualisiert.','success');
-      }catch(e){
-        showProgress('');
-        showStatus('Fehler: '+e.message,'error');
-      }
-    }
-
-    // ─── Update Sitemap ───
+    // ─── Update sitemap.xml ───
     async function updateSitemap(){
       try{
         var res=await ghAPI('/contents/_posts?ref='+BRANCH);
-        var files=await res.json();
-        if(!Array.isArray(files))return;
+        var files=await res.json();if(!Array.isArray(files))return;
         var today=new Date().toISOString().substring(0,10);
         var xml='<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
         xml+='  <url>\n    <loc>'+SITE+'/</loc>\n    <lastmod>'+today+'</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>1.0</priority>\n  </url>\n';
@@ -445,31 +419,65 @@ imgTag+'\n'+
       }catch(e){console.error('Sitemap:',e);}
     }
 
-    // ─── Load Posts ───
+    // ═══════════════════════════════════════════════
+    // Alle regenerieren (Seiten + posts.json + Sitemap)
+    // ═══════════════════════════════════════════════
+    async function regenerateAll(){
+      if(!confirm('Alle Seiten, posts.json und Sitemap neu generieren?'))return;
+      showStatus('Regenerierung gestartet...','info');
+      try{
+        var res=await ghAPI('/contents/_posts?ref='+BRANCH);
+        if(!res.ok){showStatus('Keine Posts gefunden.','error');return;}
+        var files=await res.json();if(!Array.isArray(files)){showStatus('Fehler.','error');return;}
+        var count=0,total=files.filter(function(f){return f.name.endsWith('.md');}).length;
+
+        for(var i=0;i<files.length;i++){
+          var f=files[i];if(!f.name.endsWith('.md'))continue;
+          showProgress('Regeneriere '+(count+1)+' von '+total+'...');
+          var cr=await ghAPI('/contents/'+f.path+'?ref='+BRANCH);
+          var cd=await cr.json();
+          var decoded=decodeContent(cd.content);
+          var parsed=parseFM(decoded);
+          var meta=parsed.m;
+          var slug=f.name.replace(/^\d{4}-\d{2}-\d{2}-/,'').replace('.md','');
+          if(meta.status==='draft')continue;
+          if(meta.status==='scheduled'){var pd=meta.publish_date||'',pt=meta.publish_time||'08:00';if(pd&&new Date(pd+'T'+pt)>new Date())continue;}
+          await publishStaticPage(meta,parsed.b,slug);
+          count++;
+        }
+
+        showProgress('posts.json wird aktualisiert...');
+        await updatePostsJson();
+        showProgress('Sitemap wird aktualisiert...');
+        await updateSitemap();
+        showProgress('');
+        showStatus('Fertig! '+count+' Seiten + posts.json + Sitemap aktualisiert.','success');
+      }catch(e){showProgress('');showStatus('Fehler: '+e.message,'error');}
+    }
+
+    // ─── Load post list for CMS view ───
     async function loadPosts(){
       var container=document.getElementById('posts');
       container.innerHTML='<div class="loading">Beiträge werden geladen...</div>';
       try{
         var res=await ghAPI('/contents/_posts?ref='+BRANCH);
         if(res.status===404){container.innerHTML='<div class="empty">Noch keine Beiträge.</div>';return;}
-        var files=await res.json();
-        if(!files.length){container.innerHTML='<div class="empty">Noch keine Beiträge.</div>';return;}
+        var files=await res.json();if(!files.length){container.innerHTML='<div class="empty">Noch keine Beiträge.</div>';return;}
         files.sort(function(a,b){return b.name.localeCompare(a.name);});
         container.innerHTML='';
         for(var i=0;i<files.length;i++){
           var f=files[i];
           var cr=await ghAPI('/contents/'+f.path+'?ref='+BRANCH);
           var cd=await cr.json();
-          var dec=decodeURIComponent(escape(atob(cd.content.replace(/\n/g,''))));
-          var catMatch=dec.match(/category:\s*(\w+)/);
-          var cat=catMatch?catMatch[1]:'';
-          var catLabel=categoryLabels[cat]||cat;
-          var statusMatch=dec.match(/status:\s*(\w+)/);
+          var decoded=decodeContent(cd.content);
+          var catMatch=decoded.match(/category:\s*(\w+)/);
+          var cat=catMatch?catMatch[1]:'';var catLabel=categoryLabels[cat]||cat;
+          var statusMatch=decoded.match(/status:\s*(\w+)/);
           var postStatus=statusMatch?statusMatch[1]:'publish';
           var statusTag='';
-          if(postStatus==='scheduled'){statusTag='<span class="status-tag scheduled">Geplant</span>';}
-          else if(postStatus==='draft'){statusTag='<span class="status-tag draft">Entwurf</span>';}
-          else{statusTag='<span class="status-tag live">Live</span>';}
+          if(postStatus==='scheduled')statusTag='<span class="status-tag scheduled">Geplant</span>';
+          else if(postStatus==='draft')statusTag='<span class="status-tag draft">Entwurf</span>';
+          else statusTag='<span class="status-tag live">Live</span>';
           var name=f.name.replace(/^\d{4}-\d{2}-\d{2}-/,'').replace('.md','').replace(/-/g,' ');
           var date=f.name.substring(0,10);
           var slug=f.name.replace(/^\d{4}-\d{2}-\d{2}-/,'').replace('.md','');
@@ -506,7 +514,7 @@ imgTag+'\n'+
       try{
         var res=await ghAPI('/contents/'+path+'?ref='+BRANCH);
         var data=await res.json();
-        var content=decodeURIComponent(escape(atob(data.content.replace(/\n/g,''))));
+        var content=decodeContent(data.content);
         editingPath=path;editingSha=data.sha;
         var parts=content.split('---');
         if(parts.length>=3){
@@ -524,27 +532,36 @@ imgTag+'\n'+
           var ps=gv('status')||'publish';
           document.getElementById('postStatus').value=ps;
           if(ps==='scheduled'){document.getElementById('postDate').value=gv('publish_date');document.getElementById('postTimeSchedule').value=gv('publish_time')||'08:00';document.getElementById('scheduleFields').style.display='block';updateScheduleInfo();}
-          else{document.getElementById('scheduleFields').style.display='none';}
-          toggleSchedule();
-          previewImage();updateCharCount('postDesc','descCount',160);
+          else document.getElementById('scheduleFields').style.display='none';
+          toggleSchedule();previewImage();updateCharCount('postDesc','descCount',160);
         }
       }catch(e){showStatus('Fehler: '+e.message,'error');}
     }
 
+    // ═══════════════════════════════════════════════
+    // DELETE – löscht Post + statische Seite + aktualisiert posts.json + Sitemap
+    // ═══════════════════════════════════════════════
     async function deletePost(path,sha,slug){
       if(!confirm('Beitrag wirklich löschen?'))return;
       try{
+        showStatus('Beitrag wird gelöscht...','info');
         var res=await ghAPI('/contents/'+path,{method:'DELETE',body:JSON.stringify({message:'Gelöscht',sha:sha,branch:BRANCH})});
         if(res.ok){
-          showStatus('Beitrag gelöscht. Seite wird entfernt...','info');
+          showStatus('Statische Seite wird entfernt...','info');
           await deleteStaticPage(slug);
+          showStatus('posts.json wird aktualisiert...','info');
+          await updatePostsJson();
+          showStatus('Sitemap wird aktualisiert...','info');
           await updateSitemap();
-          showStatus('Beitrag und Seite gelöscht!','success');
+          showStatus('Beitrag komplett gelöscht!','success');
           loadPosts();
         }else{var err=await res.json();showStatus('Fehler: '+(err.message||'Unbekannt'),'error');}
       }catch(e){showStatus('Fehler: '+e.message,'error');}
     }
 
+    // ═══════════════════════════════════════════════
+    // SAVE – speichert Post + statische Seite + aktualisiert posts.json + Sitemap
+    // ═══════════════════════════════════════════════
     async function savePost(){
       var title=document.getElementById('postTitle').value.trim();
       var category=document.getElementById('postCategory').value;
@@ -570,7 +587,7 @@ imgTag+'\n'+
       var slug=customSlug||generateSlug(title);
 
       var fm='---\ntitle: "'+title.replace(/"/g,'\\"')+'"\ndate: '+dateStr+'\nauthor: Autarkie-Finder\ncategory: '+category+'\ndescription: "'+desc.replace(/"/g,'\\"')+'"\nreading_time: '+time+'\nstatus: '+status+'\n';
-      if(status==='scheduled'){fm+='publish_date: "'+schedDate+'"\npublish_time: "'+schedTime+'"\n';}
+      if(status==='scheduled')fm+='publish_date: "'+schedDate+'"\npublish_time: "'+schedTime+'"\n';
       if(image)fm+='image: "'+image+'"\n';
       if(imageAlt)fm+='image_alt: "'+imageAlt+'"\n';
       if(keywords)fm+='keywords: "'+keywords+'"\n';
@@ -586,16 +603,19 @@ imgTag+'\n'+
         showStatus('Beitrag wird gespeichert...','info');
         var res=await ghAPI('/contents/'+path,{method:'PUT',body:JSON.stringify(body)});
         if(res.ok){
-          // Generate static HTML page if not draft
+          // Statische Seite generieren (nur wenn nicht Draft)
           if(status==='publish'){
             showStatus('Statische Seite wird generiert...','info');
             var meta={title:title,date:dateStr,category:category,description:desc,reading_time:time,image:image,image_alt:imageAlt,keywords:keywords};
             await publishStaticPage(meta,content,slug);
           }
-          // Update sitemap
+          // posts.json aktualisieren
+          showStatus('posts.json wird aktualisiert...','info');
+          await updatePostsJson();
+          // Sitemap aktualisieren
           showStatus('Sitemap wird aktualisiert...','info');
           await updateSitemap();
-          showStatus('Beitrag veröffentlicht + statische Seite erstellt!','success');
+          showStatus('Beitrag veröffentlicht + posts.json + Sitemap aktualisiert!','success');
           showList();
         }else{var err=await res.json();showStatus('Fehler: '+(err.message||'Unbekannt'),'error');}
       }catch(e){showStatus('Fehler: '+e.message,'error');}
@@ -612,7 +632,7 @@ imgTag+'\n'+
       document.getElementById('previewModal').style.display='block';
     }
 
-    document.getElementById('postTitle').addEventListener('input',function(){if(!editingPath){document.getElementById('postSlug').value=generateSlug(this.value);}});
+    document.getElementById('postTitle').addEventListener('input',function(){if(!editingPath)document.getElementById('postSlug').value=generateSlug(this.value);});
     document.getElementById('postDate').addEventListener('input',updateScheduleInfo);
     document.getElementById('postTimeSchedule').addEventListener('input',updateScheduleInfo);
   </script>
